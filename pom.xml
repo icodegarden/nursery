@@ -53,6 +53,7 @@
 	<modules>
 		<module>nursery-reactive-web-demo</module>
 		<module>nursery-servlet-web-demo</module>
+		<module>nursery-spring-boot-dependencies</module>
 		<module>nursery-spring-boot-starter</module>
 		<module>nursery-spring-boot-starter-beecomb</module>
 		<module>nursery-spring-boot-starter-cache</module>
@@ -64,6 +65,7 @@
 		<module>nursery-spring-boot-starter-shardingsphere</module>
 		<module>nursery-spring-boot-starter-web</module>
 		<module>nursery-spring-boot-starter-zookeeper</module>
+		<module>nursery-spring-cloud-dependencies</module>
 		<module>nursery-spring-cloud-starter</module>
 		<module>nursery-spring-cloud-starter-gateway</module>
 		<module>nursery-spring-cloud-starter-seata</module>
