@@ -1,6 +1,7 @@
 package io.github.icodegarden.nursery.springboot.web.autoconfigure;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ public class NurseryWebCommonAutoConfiguration {
 	@Configuration
 	protected static class MappingJackson2HttpMessageConverterAutoConfiguration {
 
+		@ConditionalOnMissingBean
 		@Bean
 		public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
 			log.info("nursery init bean of MappingJackson2HttpMessageConverter");
