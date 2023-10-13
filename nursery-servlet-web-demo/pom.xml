@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>io.github.icodegarden</groupId>
+		<artifactId>nursery</artifactId>
+		<version>3.0.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>nursery-servlet-web-demo</artifactId>
+	<name>${project.artifactId}</name>
+
+	<properties>
+		<java.version>17</java.version>
+		<maven.package.skip>true</maven.package.skip> 
+		<maven.install.skip>true</maven.install.skip>
+		<maven.deploy.skip>true</maven.deploy.skip> 
+	</properties>
+	
+	<dependencies>		
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-boot-starter-web-servlet</artifactId><!-- servletweb项目-->
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-cloud-starter</artifactId><!-- cloud项目-->
+			<version>3.0.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-boot-starter-mybatis</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-boot-starter-elasticsearch-latest</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-boot-starter-redis-lettuce</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-boot-starter-hbase-apache</artifactId>
+			<version>3.0.0</version>
+			<!-- 下面这些在项目里需要排除，否则冲突启动报错 -->
+			<exclusions>
+		    	<exclusion>
+		    		<groupId>javax.servlet</groupId>
+				  	<artifactId>servlet-api</artifactId>
+		    	</exclusion>
+		    	<exclusion>
+		    		<groupId>org.glassfish.web</groupId>
+    				<artifactId>javax.servlet.jsp</artifactId>
+		    	</exclusion>
+		    	<exclusion>
+		    		<groupId>javax.servlet.jsp</groupId>
+    				<artifactId>javax.servlet.jsp-api</artifactId>
+		    	</exclusion>
+		    	<exclusion>
+		    		<groupId>com.zaxxer</groupId>
+   					<artifactId>HikariCP-java7</artifactId>
+		    	</exclusion>
+		    	<exclusion>
+					<groupId>org.slf4j</groupId>
+				    <artifactId>slf4j-reload4j</artifactId>
+				</exclusion>
+		    </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-boot-starter-kafka</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-boot-starter-zookeeper</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-recipes</artifactId>
+			<version>5.2.0</version><!-- 防止覆盖，hbase使用了低版本的curator，构造方法有差异会报错 -->
+		</dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+			<version>5.2.0</version><!-- 防止覆盖，hbase使用了低版本的curator，构造方法有差异会报错 -->
+		</dependency>
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-client</artifactId>
+			<version>5.2.0</version><!-- 防止覆盖，hbase使用了低版本的curator，构造方法有差异会报错 -->
+		</dependency>
+		
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-boot-starter-cache</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-boot-starter-beecomb</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-cloud-starter-sentinel</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-cloud-starter-seata</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        
+        <dependency>
+	      	<groupId>com.mysql</groupId>
+	      	<artifactId>mysql-connector-j</artifactId>
+	      	<scope>runtime</scope>
+	    </dependency>
+        <dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-boot-starter</artifactId>
+		    <version>3.0.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<dependencyManagement>
+   	 	<dependencies>
+			<dependency>
+	            <!-- Import dependency management from Spring Boot -->
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-dependencies</artifactId>
+	            <version>${spring-boot.version}</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+	    </dependencies>
+	</dependencyManagement>
+	
+</project>

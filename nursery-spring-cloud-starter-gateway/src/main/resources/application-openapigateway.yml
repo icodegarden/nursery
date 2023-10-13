@@ -1,0 +1,78 @@
+spring:
+  cloud:
+    gateway:   
+      default-filters:   #不用修改，放在这里是因为api也有一个不同的配置
+      - RemoveRequestHeader=X-Internal-Rpc
+      - RemoveRequestHeader=Authorization    
+#      - RequestHeaderSize=102400B      #不设置时默认不限制
+#      - name: RequestSize #不设置时默认5MB
+#        args:
+#          maxSize: 2048MB              
+#      - name: CacheRequestBody #springboot3之前有OutOfDirectMemoryError
+#        args:
+#          bodyClass: io.github.icodegarden.commons.lang.spec.sign.OpenApiRequestBody
+      routes:
+#--------------------------------------------------------------------------------------      
+      - id: metadatas_system_route
+        uri: lb://commons-test-web
+        predicates:
+        - Path=/openapi/v1/biz/methods
+        - BodyMethod=consumer.metadata.system
+        filters: 
+        - RewritePath=/openapi/v1/biz/methods,/openapi/v1/metadatas/system
+#        - RewritePath=/openapi/v1/biz/methods,/openapi/v1/metadatas/system_biz_content2 #这个接口后端只接收biz_content，只返回biz_content
+#        - OpenApiModifyRequestBody #后端只接收biz_content时需要
+#        - OpenApiModifyResponseBody #后端只返回biz_content时需要
+#--------------------------------------------------------------------------------------
+      - id: route_tc
+        uri: lb://gddc-tc
+        predicates:  #这些是原OTA对接TC的，由于接口规范没有按照正式文档来，因此在gddc里网关只做转发，验签有gddc-tc自己处理
+        - Path=/openapi/v1/bss/sync,/openapi/v1/bss/state,/openapi/v1/softwareParts/sync           
+        
+    sentinel: #sentinel-springcloud的自动配置
+      transport:
+        port: 8719
+        dashboard: localhost:8858           
+
+icodegarden:
+  nursery:
+    sentinel: #NurserySentinelProperties.java
+      cluster:
+        enabled: true
+        serverAddr: localhost
+        serverPort: 11111
+      nacos:
+        dynamicRuleGroupId: Sentinel   
+    gateway:
+      security: #NurseryGatewaySecurityProperties.java
+        signature:
+          headerAppKey: true
+          apps:
+          - appId: dev_sample_appid
+            appKey: dev_sample_appkey
+            appName: sample_sys #演示消费者系统 中文header ASCII乱码
+            methods:
+            - consumer.metadata.system
+            - consumer.metadata.kafka
+            - consumer.metadata.datafilters
+          - appId: dev_ota_cn_appid
+            appKey: 100ota-cn001
+            appName: 开发环境OTA中国
+            methods:
+            - consumer.metadata.system
+            - consumer.metadata.kafka
+            - consumer.metadata.datafilters
+            - vehicle.data.requestResend
+            - software.url.receive    
+          - appId: dev_ota_eu_appid
+            appKey: 200ota-eu002
+            appName: 开发环境OTA欧洲
+            methods:
+            - consumer.metadata.system
+            - consumer.metadata.kafka
+            - consumer.metadata.datafilters
+            - vehicle.data.requestResend
+            - software.url.receive    
+                   
+
+

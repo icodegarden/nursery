@@ -1,0 +1,2 @@
+io.github.icodegarden.nursery.springboot.autoconfigure.NurseryBeanAutoConfiguration
+io.github.icodegarden.nursery.springboot.autoconfigure.NurseryReadinessEndpointAutoConfiguration

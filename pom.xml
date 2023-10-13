@@ -1,0 +1,169 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>io.github.icodegarden</groupId>
+	<artifactId>nursery</artifactId>
+	<version>3.0.0</version>
+
+	<packaging>pom</packaging>
+
+	<name>${project.artifactId}</name>
+	
+	<description>nursery framework.</description>
+	<url>https://github.com/icodegarden/nursery</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/icodegarden/nursery</url>
+        <connection>https://github.com/icodegarden/nursery.git</connection>
+    </scm>
+	<developers>
+        <developer>
+            <id>xff</id>
+            <name>Fangfang.Xu</name>
+            <email>46557783@qq.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+		
+	<properties>
+		<spring.version>6.0.12</spring.version><!-- 跟spring-boot.version版本配套-->
+		<spring-boot.version>3.0.11</spring-boot.version>
+		<spring-cloud.version>2022.0.4</spring-cloud.version>
+		<spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
+		<nutrient.version>3.0.0</nutrient.version>
+		<wing.version>0.3.0</wing.version>
+		<beecomb.version>1.1.0</beecomb.version>
+		<pagehelper-spring-boot-starter.version>1.4.7</pagehelper-spring-boot-starter.version>
+		<sentinel.version>1.8.6</sentinel.version>
+		<seata.version>1.7.0</seata.version>
+	</properties>
+
+	<modules>
+		<module>nursery-reactive-web-demo</module>
+		<module>nursery-servlet-web-demo</module>
+		<module>nursery-spring-boot-starter</module>
+		<module>nursery-spring-boot-starter-beecomb</module>
+		<module>nursery-spring-boot-starter-cache</module>
+		<module>nursery-spring-boot-starter-elasticsearch</module>
+		<module>nursery-spring-boot-starter-hbase</module>
+		<module>nursery-spring-boot-starter-kafka</module>
+		<module>nursery-spring-boot-starter-mybatis</module>
+		<module>nursery-spring-boot-starter-redis</module>
+		<module>nursery-spring-boot-starter-shardingsphere</module>
+		<module>nursery-spring-boot-starter-web</module>
+		<module>nursery-spring-boot-starter-zookeeper</module>
+		<module>nursery-spring-cloud-starter</module>
+		<module>nursery-spring-cloud-starter-gateway</module>
+		<module>nursery-spring-cloud-starter-seata</module>
+		<module>nursery-spring-cloud-starter-sentinel</module>
+	</modules>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<source>17</source>
+					<target>17</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			
+			<!-- 加这个将会自动close -->
+<!-- 			<plugin> -->
+<!--                 <groupId>org.sonatype.plugins</groupId> -->
+<!--                 <artifactId>nexus-staging-maven-plugin</artifactId> -->
+<!--                 <version>1.6.7</version> -->
+<!--                 <extensions>true</extensions> -->
+<!--                 <configuration> -->
+<!--                     <serverId>ossrh</serverId> -->
+<!--                     <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl> -->
+<!--                     <autoReleaseAfterClose>true</autoReleaseAfterClose> -->
+<!--                 </configuration> -->
+<!--             </plugin> -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+<!-- 				<version>2.2.1</version> -->
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+<!--                 <version>2.9.1</version> -->
+                <version>3.3.1</version>
+                <configuration>
+                    <additionalJOptions>
+                        <additionalJOption>-Xdoclint:none</additionalJOption>
+                    </additionalJOptions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+		</plugins>
+	</build>
+</project>

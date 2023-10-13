@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>io.github.icodegarden</groupId>
+		<artifactId>nursery</artifactId>
+		<version>3.0.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>nursery-spring-boot-starter-beecomb</artifactId>
+	<name>${project.artifactId}</name>
+
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+            <groupId>io.github.icodegarden</groupId>
+            <artifactId>nursery-spring-boot-starter</artifactId>
+            <version>3.0.0</version><!-- 基础必须 -->
+        </dependency>
+		<dependency>
+            <groupId>io.github.icodegarden</groupId>
+            <artifactId>beecomb-executor</artifactId>
+            <version>${beecomb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.icodegarden</groupId>
+            <artifactId>beecomb-client-java</artifactId>
+            <version>${beecomb.version}</version>
+        </dependency>
+		
+	</dependencies>
+	
+</project>

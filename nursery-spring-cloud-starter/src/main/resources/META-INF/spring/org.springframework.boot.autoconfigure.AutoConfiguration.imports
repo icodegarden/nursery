@@ -1,0 +1,3 @@
+io.github.icodegarden.nursery.springcloud.autoconfigure.NurseryCloudBeanAutoConfiguration
+io.github.icodegarden.nursery.springcloud.autoconfigure.NurseryFeignAutoConfiguration
+io.github.icodegarden.nursery.springcloud.autoconfigure.NurseryLoadBalancerAutoConfiguration

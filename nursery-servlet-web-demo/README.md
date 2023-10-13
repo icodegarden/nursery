@@ -1,0 +1,1 @@
+该项目用于冒烟测试 各个AutoConfiguration是否正常，启动服务需要先启动nacos-server、mysql、redis、zookeeper、seata-server等

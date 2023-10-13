@@ -1,0 +1,46 @@
+spring:
+  cloud:
+    gateway:   
+      default-filters:   #不用修改，放在这里是因为openapi也有一个不同的配置
+      - StripPrefix=1      
+      - RemoveRequestHeader=X-Internal-Rpc
+      - RemoveRequestHeader=Authorization  
+#      - RequestHeaderSize=102400B      #不设置时默认不限制
+#      - name: RequestSize #不设置时默认5MB
+#        args:
+#          maxSize: 2048MB      
+      routes:
+      - id: commons-test-web_route
+        uri: lb://commons-test-web
+        predicates:
+        - Path=/commons/**
+#        filters: 
+#        - InternalApiModifyResponseBody #后端只返回biz_content时需要
+        metadata:
+          connect-timeout: 1000
+          response-timeout: 3000
+      - id: manage_route
+        uri: lb://gddc-manage
+        predicates:
+        - Path=/manage/**      
+    sentinel: #sentinel-springcloud的自动配置
+      transport:
+        port: 8719
+        dashboard: localhost:8858           
+       
+icodegarden:
+  nursery:
+    sentinel: #NurserySentinelProperties.java
+      cluster:
+        enabled: true
+        serverAddr: localhost
+        serverPort: 11111
+      nacos:
+        dynamicRuleGroupId: Sentinel 
+    gateway:
+      security: #NurseryGatewaySecurityProperties.java
+        jwt:
+          issuer: icodegarden
+          secretKey: icodegarden@jwt0123456789
+
+

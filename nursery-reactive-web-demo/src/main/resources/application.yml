@@ -1,0 +1,22 @@
+---
+#management.server.address: 127.0.0.1
+#management.endpoint.shutdown.enabled: true
+management.endpoints.web.exposure.include: health,loggers
+
+springfox.documentation.enabled: true
+
+server:
+  port: 18081
+spring:
+  application:
+    name: nursery-reactive-web-demo
+#  r2dbc:
+#    name: r2dbc
+#    url: r2dbcs:mysql://192.168.80.130:3306/gddc_admin
+#    username: root
+#    password: 123456
+#    pool:
+#      enabled: true
+#      max-size: 10
+#      initial-size: 10
+#      validation-query: select 1

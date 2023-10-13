@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>io.github.icodegarden</groupId>
+		<artifactId>nursery</artifactId>
+		<version>3.0.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>nursery-spring-cloud-starter-seata</artifactId>
+	<name>${project.artifactId}</name>
+
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>io.github.icodegarden</groupId>
+			<artifactId>nursery-spring-cloud-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency><!-- 基础必须 -->
+		<dependency>
+		    <groupId>io.seata</groupId>
+		    <artifactId>seata-spring-boot-starter</artifactId>
+		    <version>${seata.version}</version>
+		</dependency>
+<!-- 		<dependency> -->
+<!-- 		    <groupId>com.alibaba.cloud</groupId> -->
+<!-- 		    <artifactId>spring-cloud-alibaba-seata</artifactId> -->
+<!-- 		    <version>2.2.0.RELEASE</version> -->
+<!-- 		    <exclusions> -->
+<!--                 <exclusion> -->
+<!--                     <groupId>io.seata</groupId> -->
+<!--                     <artifactId>seata-spring-boot-starter</artifactId> -->
+<!--                 </exclusion> -->
+<!--             </exclusions> -->
+<!-- 		</dependency> -->
+			<!-- 不要引入以上版本的spring-cloud-alibaba-seata，因为这个版本不支持springcloud-loadbalancer，他还在使用ribbon导致类找不到无法启动，若有更新版本可以再尝试，到1.7.0时查了下maven中央仓库还是没有更新的版本-->
+		
+		<dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <optional>true</optional><!-- 可选 -->
+        </dependency>   
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<optional>true</optional><!-- 可选 -->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+			<optional>true</optional><!-- 可选 -->
+		</dependency>
+	</dependencies>
+	
+	<dependencyManagement>
+   	 	<dependencies>
+	        <dependency>
+	            <!-- Import dependency management from Spring Boot -->
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-dependencies</artifactId>
+	            <version>${spring-boot.version}</version>
+	            <type>pom</type>
+	            <scope>import</scope>
+	        </dependency>
+	        <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+	    </dependencies>
+	</dependencyManagement>
+		
+</project>

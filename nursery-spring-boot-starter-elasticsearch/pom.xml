@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>io.github.icodegarden</groupId>
+		<artifactId>nursery</artifactId>
+		<version>3.0.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<artifactId>nursery-spring-boot-starter-elasticsearch</artifactId>
+	
+	<packaging>pom</packaging>
+	
+	<name>${project.artifactId}</name>
+	
+	<properties>
+	</properties>
+	
+	<modules>        		
+		<module>nursery-spring-boot-starter-elasticsearch-api</module>
+        <module>nursery-spring-boot-starter-elasticsearch-latest</module>
+        <module>nursery-spring-boot-starter-elasticsearch-v7</module>        
+    </modules>
+</project>

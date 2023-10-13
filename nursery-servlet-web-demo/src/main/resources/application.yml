@@ -1,0 +1,155 @@
+---
+#management.server.address: 127.0.0.1
+#management.endpoint.shutdown.enabled: true
+management.endpoints.web.exposure.include: health,loggers
+
+mybatis.mapper-locations: classpath*:mapper/*Mapper.xml
+
+pagehelper.helperDialect: mysql
+pagehelper.reasonable: false
+pagehelper.supportMethodsArguments: true
+pagehelper.params=count: countSql
+
+springfox.documentation.enabled: true
+
+server:
+  port: 18080
+#  max-http-header-size: 8192 #默认8k
+#  tomcat: 
+#    threads:
+#      max: 200 #默认200. 最大工作线程数
+#      minSpare: 10 #默认10. 最小工作线程数
+#    maxConnections: 8192 #默认8192. 同时可接受的最大连接数（即work处理中的 + 等待work处理的），当这里满了进入acceptCount，0表示不限制
+#    acceptCount: 100 #默认100. 额外可接受的部分，当maxConnections满了之后，开始进入这里，0表示不限制
+#    keepAliveTimeout:  #默认无设置即使用connectionTimeout. 长连接超时时间，当设置-1时无限
+#    maxKeepAliveRequests: 100 #默认100. 请求多少次后关闭连接，当设置0或1时，keep-alive被disabled，当设置-1则无限
+#    connectionTimeout:  #默认无设置应该等于默认几十秒
+
+
+#验证各参数作用，代码中每次请求无限阻塞，观察请求是否继续被接受
+##maxConnections=1 acceptCount=1 treads.max=1 可接受2个请求（1个进入work线程，此时maxConnections就满了，1个进入acceptCount），然后开始拒绝
+##maxConnections=1 acceptCount=1 treads.max=2 可接受2个请求（1个进入work线程，此时maxConnections就满了，1个进入acceptCount），然后开始拒绝
+##maxConnections=2 acceptCount=1 treads.max=1 可接受3个请求（1个进入work线程，1个进入maxConnections，此时maxConnections就满了，1个进入等待acceptCount），然后开始拒绝
+##maxConnections=2 acceptCount=1 treads.max=2 可接受3个请求（2个进入work线程，此时maxConnections就满了，1个进入等待acceptCount），然后开始拒绝
+#实践5000个工作线程实时处理，处理不过来的请求就立刻拒绝如何配置 threads.max=5000 threads.minSpare=5000 maxConnections=5000 acceptCount=1
+spring:
+  application:
+    name: commons-test-web
+  mvc.servlet.load-on-startup: 1
+# 单个文件大小
+  servlet.multipart.max-file-size: 5000MB
+# 总上传的数据大小
+  servlet.multipart.max-request-size: 5000MB  
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://192.168.184.129:3306/nursery_servlet_web_demo?setUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&allowMultiQueries=true
+    username: root
+    password: 123456
+    hikari:
+      minimum-idle: 10 #默认10
+      maximum-pool-size: 10 #默认10
+#      max-lifetime: 1800000 #默认30分钟，必须>=30000ms
+#      keepalive-time: 0 #默认0，必须>=30000ms，keepalive-time必须<=max-lifetime
+      connection-timeout: 250 #默认30000,包含了request timeout,不能小于250
+#      idle-timeout: 600000 #默认10分钟 
+#      connection-init-sql: use sm_dev
+#      connection-test-query: SELECT 1    
+#  redis:
+#    ssl: false
+#    cluster:
+#      nodes: r-bp1pozc9d7ehti3jbf.redis.rds.aliyuncs.com:6379
+#    password: Aa@653210000
+  cloud:
+    loadbalancer: #LoadBalancerClientsProperties
+      retry:
+        enabled: false #默认true  
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: localhost:8858    
+        
+#1.7.0开始要配这些        
+seata: #io.seata.spring.boot.autoconfigure.properties.SeataProperties
+  tx-service-group: default_tx_group
+  service: #io.seata.spring.boot.autoconfigure.properties.client.ServiceProperties
+    vgroup-mapping:
+      default_tx_group: default
+  registry:
+    type: nacos
+    nacos: #io.seata.spring.boot.autoconfigure.properties.registry.RegistryNacosProperties
+      server-addr: 172.22.122.27:8848
+      username: nacos
+      password: otanacos01
+#      namespace: 7eeef4c2-4b9e-4363-82a2-f0effab3b128
+#      group: SEATA_GROUP
+#      cluster: default
+#      context-path:
+      ##if use MSE Nacos with auth, mutex with username/password attribute
+#      access-key:
+#      secret-key:	         
+        
+feign:
+  sentinel:
+    enabled: true #默认false
+  client:
+    config:
+      default:
+        connectTimeout: 500
+        readTimeout: 3000
+  httpclient:
+    enabled: true #default true
+    connectionTimeout: 500 #default 2000
+    max-connections: 800 #default 200
+    max-connections-per-route: 100 #default 50        
+
+icodegarden:
+  nursery:
+    sentinel: 
+      cluster:
+        enabled: true
+        serverAddr: localhost
+        serverPort: 11111      
+    mybatis:
+      mapperScan:
+        basePackages: io.github.icodegarden.nursery.servlet.web.demo.mapper
+    redis: #当配置了spring.redis时，这里可以不配，自动创建RedisExecutor(RedisTemplate)
+      pool: 
+        lettuce:
+          host: r-bp1pozc9d7ehti3jbf.redis.rds.aliyuncs.com
+          port: 6379
+          password: Aa@653210000  
+    elasticsearch:
+      httpHosts: http://localhost:9200
+    hbase:
+      versionFrom: AliyunLindorm
+      hbaseZookeeperQuorum: ld-bp129w63278nrhys9-proxy-hbaseue.hbaseue.rds.aliyuncs.com:30020
+    kafka:
+      bootstrapServers: 127.0.0.1:9092
+      producer:
+        keySerializer: org.apache.kafka.common.serialization.StringSerializer
+        valueSerializer: org.apache.kafka.common.serialization.StringSerializer
+    zookeeper:
+      connectString: 127.0.0.1:2181      
+    beecomb:
+      client:
+        basicAuth:
+          username: beecomb
+          password: beecomb
+        zookeeper: 
+          connectString: 127.0.0.1:2181     
+#          root: /beecomb
+#          sessionTimeout: 3000
+#          connectTimeout: 3000
+#          aclAuth: beecomb:beecomb
+#        master:
+#          httpHosts: http://localhost:9898,http://127.0.0.1:9898  
+      executor: 
+        zookeeper: 
+          connectString: 127.0.0.1:2181     
+#          root: /beecomb
+#          sessionTimeout: 3000
+#          connectTimeout: 3000
+#          aclAuth: beecomb:beecomb
+      
+
