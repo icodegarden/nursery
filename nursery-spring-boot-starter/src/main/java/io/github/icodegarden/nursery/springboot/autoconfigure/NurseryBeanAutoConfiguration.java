@@ -44,7 +44,9 @@ public class NurseryBeanAutoConfiguration {
 		 */
 		if (registrys != null) {
 			for (io.github.icodegarden.nutrient.lang.registry.Registry registry : registrys) {
-				GracefullyShutdown.Registry.singleton().register(new RegistryGracefullyShutdown(registry));// 默认下线优先级最高
+				if(!registry.getClass().getSimpleName().contains("$Proxy")/*Mybatis MapperProxy*/) {
+					GracefullyShutdown.Registry.singleton().register(new RegistryGracefullyShutdown(registry));// 默认下线优先级最高
+				}
 			}
 		}
 		
