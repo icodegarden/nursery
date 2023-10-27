@@ -2,10 +2,13 @@ package io.github.icodegarden.nursery.springboot.beecomb.autoconfigure;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -26,24 +29,37 @@ import lombok.extern.slf4j.Slf4j;
 @EnableConfigurationProperties({ NurseryBeeCombExecutorProperties.class })
 @Configuration
 @Slf4j
-public class NurseryBeecombExecutorAutoConfiguration {
+public class NurseryBeecombExecutorAutoConfiguration implements ApplicationListener<ApplicationReadyEvent> {
+
+	private BeeCombExecutor beeCombExecutor;
+
+	@Autowired(required = false)
+	private List<JobHandler> jobHandlers;
 
 	@ConditionalOnMissingBean
 	@ConditionalOnProperty(value = "icodegarden.nursery.beecomb.executor.enabled", havingValue = "true", matchIfMissing = true)
 	@Bean
-	public BeeCombExecutor beeCombExecutor(NurseryBeeCombExecutorProperties properties, List<JobHandler> jobHandlers,
-			Environment env) {
+	public BeeCombExecutor beeCombExecutor(NurseryBeeCombExecutorProperties properties, Environment env) {
 		log.info("nursery init bean of BeeCombExecutor");
 
 		String appName = env.getProperty("spring.application.name");
 		Assert.hasText(appName, "spring.application.name must config");
 
 		BeeCombExecutor beeCombExecutor = BeeCombExecutor.start(appName, properties);
-		if (!CollectionUtils.isEmpty(jobHandlers)) {
-			beeCombExecutor.registerReplace(jobHandlers);
-		}
+
+		this.beeCombExecutor = beeCombExecutor;
 
 		return beeCombExecutor;
+	}
+
+	@Override
+	public void onApplicationEvent(ApplicationReadyEvent event) {
+		if (!CollectionUtils.isEmpty(jobHandlers)) {
+			/*
+			 * 在服务可用后才注册
+			 */
+			beeCombExecutor.registerReplace(jobHandlers);
+		}
 	}
 
 }
