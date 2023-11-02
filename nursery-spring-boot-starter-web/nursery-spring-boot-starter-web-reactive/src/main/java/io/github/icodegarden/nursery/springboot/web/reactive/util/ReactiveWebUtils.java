@@ -133,18 +133,18 @@ public class ReactiveWebUtils extends BaseWebUtils {
 		exchange.getResponse().getHeaders().set(HEADER_AUTHORIZATION, bearerToken);
 	}
 
-	public static void responseWrite(int status, String body, ServerWebExchange exchange) throws IOException {
+	public static <T> Mono<T> responseWrite(int status, String body, ServerWebExchange exchange) throws IOException {
 		Assert.hasText(body, "body must not empty");
-		responseWrite(status, null, body, exchange);
+		return responseWrite(status, null, body, exchange);
 	}
 
-	public static void responseWrite(int status, List<Tuple2<String, List<String>>> headers, ServerWebExchange exchange)
-			throws IOException {
+	public static <T> Mono<T> responseWrite(int status, List<Tuple2<String, List<String>>> headers,
+			ServerWebExchange exchange) throws IOException {
 		Assert.notEmpty(headers, "headers must not empty");
-		responseWrite(status, headers, null, exchange);
+		return responseWrite(status, headers, null, exchange);
 	}
 
-	public static void responseWrite(int status, @Nullable List<Tuple2<String, List<String>>> headers,
+	public static <T> Mono<T> responseWrite(int status, @Nullable List<Tuple2<String, List<String>>> headers,
 			@Nullable String body, ServerWebExchange exchange) throws IOException {
 		exchange.getResponse().setRawStatusCode(status);
 		if (headers != null && !headers.isEmpty()) {
@@ -162,6 +162,6 @@ public class ReactiveWebUtils extends BaseWebUtils {
 		exchange.getResponse().getHeaders().set("Content-Type", "application/json;charset=utf-8");
 		DefaultDataBuffer dataBuffer = DefaultDataBufferFactory.sharedInstance
 				.wrap(body.getBytes(StandardCharsets.UTF_8));
-		exchange.getResponse().writeWith(Mono.just(dataBuffer));
+		return (Mono) exchange.getResponse().writeWith(Mono.just(dataBuffer));
 	}
 }

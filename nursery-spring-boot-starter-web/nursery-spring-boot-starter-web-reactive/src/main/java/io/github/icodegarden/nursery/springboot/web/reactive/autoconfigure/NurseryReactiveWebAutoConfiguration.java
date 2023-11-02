@@ -17,6 +17,7 @@ import io.github.icodegarden.nursery.springboot.web.properties.NurseryWebPropert
 import io.github.icodegarden.nursery.springboot.web.reactive.filter.ReactiveGatewayPreAuthenticatedAuthenticationFilter;
 import io.github.icodegarden.nursery.springboot.web.reactive.filter.ReactiveProcessingRequestCountFilter;
 import io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveApiResponseExceptionHandler;
+import io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveControllerAspect;
 import io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveNativeRestApiExceptionHandler;
 import io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveSentinelAdaptiveApiResponseExceptionHandler;
 import io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveSentinelAdaptiveNativeRestApiExceptionHandler;
@@ -103,7 +104,9 @@ public class NurseryReactiveWebAutoConfiguration {
 		@ConditionalOnClass({ DispatcherHandler.class, SphU.class })
 		@ConditionalOnMissingClass({ "org.springframework.web.servlet.DispatcherServlet",
 				"org.glassfish.jersey.servlet.ServletContainer" })
-		@ConditionalOnProperty(value = "icodegarden.nursery.web.exceptionHandler.apiResponse.enabled"/* mvc和flux使用相同的配置名 */, havingValue = "true", matchIfMissing = true)
+		@ConditionalOnProperty(value = "icodegarden.nursery.web.exceptionHandler.apiResponse.enabled"/*
+																										 * mvc和flux使用相同的配置名
+																										 */, havingValue = "true", matchIfMissing = true)
 		@Configuration
 		protected static class SentinelAdaptiveApiResponseReactiveExceptionHandlerAutoConfiguration {
 			@ConditionalOnMissingBean
@@ -127,7 +130,9 @@ public class NurseryReactiveWebAutoConfiguration {
 		@ConditionalOnClass({ DispatcherHandler.class, SphU.class })
 		@ConditionalOnMissingClass({ "org.springframework.web.servlet.DispatcherServlet",
 				"org.glassfish.jersey.servlet.ServletContainer" })
-		@ConditionalOnProperty(value = "icodegarden.nursery.web.exceptionHandler.nativeRestApi.enabled"/* mvc和flux使用相同的配置名 */, havingValue = "true", matchIfMissing = false)
+		@ConditionalOnProperty(value = "icodegarden.nursery.web.exceptionHandler.nativeRestApi.enabled"/*
+																										 * mvc和flux使用相同的配置名
+																										 */, havingValue = "true", matchIfMissing = false)
 		@Configuration
 		protected static class SentinelAdaptiveNativeRestApiReactiveExceptionHandlerAutoConfiguration {
 			@ConditionalOnMissingBean
@@ -151,7 +156,9 @@ public class NurseryReactiveWebAutoConfiguration {
 		@ConditionalOnClass({ DispatcherHandler.class })
 		@ConditionalOnMissingClass({ "org.springframework.web.servlet.DispatcherServlet",
 				"org.glassfish.jersey.servlet.ServletContainer", "com.alibaba.csp.sentinel.SphU" })
-		@ConditionalOnProperty(value = "icodegarden.nursery.web.exceptionHandler.apiResponse.enabled"/* mvc和flux使用相同的配置名 */, havingValue = "true", matchIfMissing = true)
+		@ConditionalOnProperty(value = "icodegarden.nursery.web.exceptionHandler.apiResponse.enabled"/*
+																										 * mvc和flux使用相同的配置名
+																										 */, havingValue = "true", matchIfMissing = true)
 		@Configuration
 		protected static class ApiResponseReactiveExceptionHandlerAutoConfiguration {
 			@ConditionalOnMissingBean
@@ -175,7 +182,9 @@ public class NurseryReactiveWebAutoConfiguration {
 		@ConditionalOnClass({ DispatcherHandler.class })
 		@ConditionalOnMissingClass({ "org.springframework.web.servlet.DispatcherServlet",
 				"org.glassfish.jersey.servlet.ServletContainer", "com.alibaba.csp.sentinel.SphU" })
-		@ConditionalOnProperty(value = "icodegarden.nursery.web.exceptionHandler.nativeRestApi.enabled"/* mvc和flux使用相同的配置名 */, havingValue = "true", matchIfMissing = false)
+		@ConditionalOnProperty(value = "icodegarden.nursery.web.exceptionHandler.nativeRestApi.enabled"/*
+																										 * mvc和flux使用相同的配置名
+																										 */, havingValue = "true", matchIfMissing = false)
 		@Configuration
 		protected static class NativeRestApiReactiveExceptionHandlerAutoConfiguration {
 			@ConditionalOnMissingBean
@@ -187,6 +196,25 @@ public class NurseryReactiveWebAutoConfiguration {
 				exceptionHandler.setPrintErrorStackOnWarn(
 						commonsWebProperties.getExceptionHandler().getPrintErrorStackOnWarn());
 				return exceptionHandler;
+			}
+		}
+
+		/**
+		 * 
+		 * 有webflux且没有webmvc <br>
+		 * 
+		 * @see org.springframework.boot.WebApplicationType.deduceFromClasspath()
+		 */
+		@ConditionalOnClass({ DispatcherHandler.class })
+		@ConditionalOnMissingClass({ "org.springframework.web.servlet.DispatcherServlet",
+				"org.glassfish.jersey.servlet.ServletContainer" })
+		@Configuration
+		protected static class ReactiveControllerAspectAutoConfiguration {
+			@ConditionalOnMissingBean
+			@Bean
+			public ReactiveControllerAspect reactiveControllerAspect() {
+				log.info("nursery init bean of ReactiveControllerAspect");
+				return new ReactiveControllerAspect();
 			}
 		}
 	}

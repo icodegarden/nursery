@@ -20,6 +20,7 @@ import io.github.icodegarden.nursery.springboot.security.Authentication;
 import io.github.icodegarden.nursery.springboot.security.SecurityUtils;
 import io.github.icodegarden.nursery.springboot.security.SimpleAuthentication;
 import io.github.icodegarden.nursery.springboot.security.SimpleUser;
+import io.github.icodegarden.nursery.springboot.security.SpringAuthentication;
 import io.github.icodegarden.nursery.springboot.web.reactive.autoconfigure.NurseryReactiveWebAutoConfiguration;
 import io.github.icodegarden.nursery.springboot.web.reactive.util.ReactiveWebUtils;
 import io.github.icodegarden.nursery.springboot.web.reactive.util.matcher.ReactiveAntPathRequestMatcher;
@@ -125,16 +126,15 @@ public class ReactiveGatewayPreAuthenticatedAuthenticationFilter implements WebF
 			SimpleUser user = new SimpleUser(userId, userName, "", Collections.emptyList());
 			authentication = new SimpleAuthentication(user, Collections.emptyList());
 		}
+
 		if (authentication != null) {
-			SecurityUtils.setAuthentication(authentication);
+			/**
+			 * @see io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveControllerAdvice
+			 */
+			exchange.getAttributes().put("authentication", authentication);
 		}
 
-		ReactiveWebUtils.setExchange(exchange);
-
-		return chain.filter(exchange).doFinally(s -> {
-			SecurityUtils.setAuthentication(null);
-			ReactiveWebUtils.setExchange(null);
-		});
+		return chain.filter(exchange);
 	}
 
 	@Override

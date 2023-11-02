@@ -11,9 +11,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler;
 import org.springframework.web.server.ServerWebExchange;
 
-import io.github.icodegarden.nutrient.lang.spec.response.ClientPermissionErrorCodeException;
-import io.github.icodegarden.nutrient.lang.spec.response.InternalApiResponse;
-import io.github.icodegarden.nutrient.lang.util.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
@@ -23,7 +20,7 @@ import reactor.core.publisher.Mono;
  *
  */
 @Slf4j
-public class ReactiveApiResponseAccessDeniedHandler implements ServerAccessDeniedHandler {
+public class ReactiveNativeRestApiAccessDeniedHandler implements ServerAccessDeniedHandler {
 
 	@Override
 	public Mono<Void> handle(ServerWebExchange exchange, AccessDeniedException denied) {
@@ -32,7 +29,7 @@ public class ReactiveApiResponseAccessDeniedHandler implements ServerAccessDenie
 		}
 		
 		return Mono.defer(() -> Mono.just(exchange.getResponse())).flatMap((response) -> {
-			response.setStatusCode(HttpStatus.OK);
+			response.setStatusCode(HttpStatus.FORBIDDEN);
 			response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
 			String message = "Access Denied, Not Authorized.";
@@ -41,13 +38,8 @@ public class ReactiveApiResponseAccessDeniedHandler implements ServerAccessDenie
 				log.info("request {}", message);
 			}
 
-			ClientPermissionErrorCodeException ece = new ClientPermissionErrorCodeException(
-					ClientPermissionErrorCodeException.SubPair.INSUFFICIENT_PERMISSIONS.getSub_code(), message);
-			InternalApiResponse<Object> apiResponse = InternalApiResponse.fail(ece);
-
 			DataBufferFactory dataBufferFactory = response.bufferFactory();
-			DataBuffer buffer = dataBufferFactory
-					.wrap(JsonUtils.serialize(apiResponse).getBytes(Charset.forName("utf-8")));
+			DataBuffer buffer = dataBufferFactory.wrap(message.getBytes(Charset.forName("utf-8")));
 			return response.writeWith(Mono.just(buffer)).doOnError((error) -> DataBufferUtils.release(buffer));
 		});
 	}
