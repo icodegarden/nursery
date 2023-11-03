@@ -86,7 +86,6 @@ public class ReactiveControllerAspect implements InstantiationAwareBeanPostProce
 					if (authentication != null) {
 						SecurityUtils.setAuthentication(authentication);
 					}
-
 					ReactiveWebUtils.setExchange(exchange);
 
 					return pjp.proceed();

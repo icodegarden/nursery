@@ -3,6 +3,8 @@ package io.github.icodegarden.commons.test.web;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import io.github.icodegarden.nursery.springboot.web.reactive.util.ReactiveWebUtils;
+
 /**
  * 
  * @author Fangfang.Xu
@@ -12,6 +14,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class NurseryReactiveWebDemoApplication {
 
 	public static void main(String[] args) {
+		ReactiveWebUtils.initGeneralServerConfig();
+		
 		SpringApplication.run(NurseryReactiveWebDemoApplication.class, args);
 	}
 

@@ -138,19 +138,19 @@ public class ServletWebUtils extends BaseWebUtils {
 		response.setHeader(HEADER_AUTHORIZATION, bearerToken);
 	}
 
-	public static void responseWrite(int status, String body, HttpServletResponse response) throws IOException {
+	public static void responseWrite(int status, String body, HttpServletResponse response) {
 		Assert.hasText(body, "body must not empty");
 		responseWrite(status, null, body, response);
 	}
 
 	public static void responseWrite(int status, List<Tuple2<String, List<String>>> headers,
-			HttpServletResponse response) throws IOException {
+			HttpServletResponse response) {
 		Assert.notEmpty(headers, "headers must not empty");
 		responseWrite(status, headers, null, response);
 	}
 
 	public static void responseWrite(int status, @Nullable List<Tuple2<String, List<String>>> headers,
-			@Nullable String body, HttpServletResponse response) throws IOException {
+			@Nullable String body, HttpServletResponse response) {
 		response.setStatus(status);
 		if (headers != null && !headers.isEmpty()) {
 			for (Tuple2<String, List<String>> header : headers) {
@@ -166,6 +166,10 @@ public class ServletWebUtils extends BaseWebUtils {
 //		response.setContentType("application/json;charset=utf-8");
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		response.setCharacterEncoding("utf-8");
-		response.getWriter().println(body);
+		try {
+			response.getWriter().println(body);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 }

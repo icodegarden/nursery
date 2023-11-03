@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 public class ApiController {
 
 	@GetMapping("/anonymous/v1/infos")
-	public ResponseEntity<Mono<Object>> info() {
-		return ResponseEntity.ok(Mono.just("ok"));
+	public Mono<ResponseEntity<Object>> info() {
+		return Mono.just(ResponseEntity.ok("ok"));
 	}
 }
