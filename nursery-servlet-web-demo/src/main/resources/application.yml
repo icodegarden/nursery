@@ -1,5 +1,6 @@
 ---
 #management.server.address: 127.0.0.1
+management.server.port: 8081
 #management.endpoint.shutdown.enabled: true
 management.endpoints.web.exposure.include: health,loggers
 
@@ -13,7 +14,7 @@ pagehelper.params=count: countSql
 springfox.documentation.enabled: true
 
 server:
-  port: 18080
+  port: 8080
 #  max-http-header-size: 8192 #默认8k
 #  tomcat: 
 #    threads:
