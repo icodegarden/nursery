@@ -1,6 +1,5 @@
 package io.github.icodegarden.nursery.springboot.web.reactive.util;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,10 +34,10 @@ public class ReactiveWebUtils extends BaseWebUtils {
 
 	@Getter
 	private static enum ServerType {
-		Gateway("500"/* 网关不是计算密集型，数量大比较好，配置成等于xxx.httpclient.pool.max-connections */, "500"), //
-		General("200", "200"), //
-		Compute("100", "100"), //
-		IO("400", "400");
+		Gateway("500"/* 网关不是计算密集型，数量大比较好，配置成等于xxx.httpclient.pool.max-connections */, "2000"), //
+		General("200", "800"), //
+		Compute("50", "200"), //
+		IO("400", "1600");
 
 		private final String ioSelectCount = Runtime.getRuntime().availableProcessors() == 1 ? "1" : "2";
 		private final String ioWorkerCount;
