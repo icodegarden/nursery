@@ -35,7 +35,7 @@ server:
 #实践5000个工作线程实时处理，处理不过来的请求就立刻拒绝如何配置 threads.max=5000 threads.minSpare=5000 maxConnections=5000 acceptCount=1
 spring:
   application:
-    name: commons-test-web
+    name: nursery-servlet-web-demo
   mvc.servlet.load-on-startup: 1
 # 单个文件大小
   servlet.multipart.max-file-size: 5000MB

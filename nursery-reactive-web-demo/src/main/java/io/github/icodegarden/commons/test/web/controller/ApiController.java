@@ -3,6 +3,7 @@ package io.github.icodegarden.commons.test.web.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 
 import reactor.core.publisher.Mono;
 
@@ -15,7 +16,7 @@ import reactor.core.publisher.Mono;
 public class ApiController {
 
 	@GetMapping("/anonymous/v1/infos")
-	public Mono<ResponseEntity<Object>> info() {
+	public Mono<ResponseEntity<Object>> info(ServerWebExchange exchange) {
 		return Mono.just(ResponseEntity.ok("ok"));
 	}
 }
