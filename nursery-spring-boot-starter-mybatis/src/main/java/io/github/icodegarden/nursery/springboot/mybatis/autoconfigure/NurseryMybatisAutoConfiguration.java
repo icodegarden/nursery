@@ -12,7 +12,7 @@ import io.github.icodegarden.nursery.springboot.mybatis.MybatisGracefullyStartup
 import io.github.icodegarden.nursery.springboot.mybatis.properties.NurseryMybatisProperties;
 import io.github.icodegarden.nutrient.lang.lifecycle.GracefullyStartup;
 import io.github.icodegarden.nutrient.mybatis.interceptor.SqlInterceptor;
-import io.github.icodegarden.nutrient.mybatis.repository.MysqlMybatisDatabase;
+import io.github.icodegarden.nutrient.mybatis.repository.MysqlMybatisDatabaseMapper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -45,7 +45,7 @@ public class NurseryMybatisAutoConfiguration {
 	@ConditionalOnClass(name = { "com.mysql.cj.MysqlConnection" })
 	@ConditionalOnProperty(value = "icodegarden.nursery.mybatis.gracefullystartup.enabled", havingValue = "true", matchIfMissing = true)
 	@Bean
-	public GracefullyStartup mybatisGracefullyStartup(MysqlMybatisDatabase mysqlMybatisDatabase) {
+	public GracefullyStartup mybatisGracefullyStartup(MysqlMybatisDatabaseMapper mysqlMybatisDatabase) {
 		log.info("nursery init bean of MybatisGracefullyStartup");
 
 		return new MybatisGracefullyStartup(mysqlMybatisDatabase);
@@ -54,7 +54,7 @@ public class NurseryMybatisAutoConfiguration {
 	@ConditionalOnClass(MapperScan.class)
 	@ConditionalOnProperty(value = "icodegarden.nursery.mybatis.mapperScan.enabled", havingValue = "true", matchIfMissing = true)
 	@MapperScan(basePackages = "${" + NurseryMybatisProperties.SCAN_BASE_PACKAGES_PROPERTIE_NAME + "}", basePackageClasses = {
-			io.github.icodegarden.nutrient.mybatis.repository.MysqlMybatisDatabase.class, //
+			io.github.icodegarden.nutrient.mybatis.repository.MysqlMybatisDatabaseMapper.class, //
 			io.github.icodegarden.nutrient.mybatis.concurrent.lock.MysqlMybatisLockMapper.class,//
 			io.github.icodegarden.nutrient.mybatis.concurrent.lock.MysqlMybatisReadWriteLockMapper.class,//
 			io.github.icodegarden.nutrient.mybatis.registry.MysqlMybatisRegistryMapper.class//

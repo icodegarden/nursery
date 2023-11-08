@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.icodegarden.nutrient.lang.repository.OptimizeTableResults;
-import io.github.icodegarden.nutrient.mybatis.repository.MysqlMybatisDatabase;
+import io.github.icodegarden.nutrient.mybatis.repository.MysqlMybatisDatabaseMapper;
 
 /**
  * 
@@ -19,7 +19,7 @@ import io.github.icodegarden.nutrient.mybatis.repository.MysqlMybatisDatabase;
 public class DatabaseController {
 
 	@Autowired
-	MysqlMybatisDatabase mysqlMybatisDatabase;
+	MysqlMybatisDatabaseMapper mysqlMybatisDatabase;
 
 	@GetMapping("database/mysqlMybatis")
 	public ResponseEntity<?> mysqlMybatis() {
