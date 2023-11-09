@@ -1,4 +1,4 @@
-package io.github.icodegarden.commons.test.web;
+package io.github.icodegarden.nursery.reactive.web.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

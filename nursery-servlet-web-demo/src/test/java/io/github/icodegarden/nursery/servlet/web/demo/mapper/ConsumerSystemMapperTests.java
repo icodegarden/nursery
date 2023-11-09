@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import io.github.icodegarden.commons.lang.util.SystemUtils;
-import io.github.icodegarden.nursery.servlet.web.demo.mapper.ConsumerSystemMapper;
 import io.github.icodegarden.nursery.servlet.web.demo.pojo.persistence.ConsumerSystemPO;
+import io.github.icodegarden.nutrient.lang.util.SystemUtils;
 
 /**
  * 

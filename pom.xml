@@ -44,7 +44,7 @@
 		<spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
 		<nutrient.version>3.0.0</nutrient.version>
 		<wing.version>1.0.0</wing.version>
-		<beecomb.version>1.1.0</beecomb.version>
+		<beecomb.version>2.0.0</beecomb.version>
 		<pagehelper-spring-boot-starter.version>1.4.7</pagehelper-spring-boot-starter.version>
 		<sentinel.version>1.8.6</sentinel.version>
 		<seata.version>1.7.0</seata.version>

@@ -6,10 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.icodegarden.commons.lang.util.SystemUtils;
 import io.github.icodegarden.nursery.servlet.web.demo.feign.SelfFeign;
 import io.github.icodegarden.nursery.servlet.web.demo.mapper.ConsumerSystemMapper;
 import io.github.icodegarden.nursery.servlet.web.demo.pojo.persistence.ConsumerSystemPO;
+import io.github.icodegarden.nutrient.lang.util.SystemUtils;
 import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
 

@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.icodegarden.commons.lang.spec.response.InternalApiResponse;
-import io.github.icodegarden.commons.lang.spec.response.OpenApiResponse;
+import io.github.icodegarden.nutrient.lang.spec.response.InternalApiResponse;
+import io.github.icodegarden.nutrient.lang.spec.response.OpenApiResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

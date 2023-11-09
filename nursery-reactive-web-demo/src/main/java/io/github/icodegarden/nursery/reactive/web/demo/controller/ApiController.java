@@ -1,4 +1,4 @@
-package io.github.icodegarden.commons.test.web.controller;
+package io.github.icodegarden.nursery.reactive.web.demo.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
