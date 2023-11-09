@@ -115,6 +115,48 @@ private MysqlMybatisReadWriteLockMapper mapper;
 DistributedReentrantReadWriteLock lock = new MysqlMybatisReentrantReadWriteLock(mapper, lockName, expireSeconds);
 ```
 
+## 注册
+不同于Nacos等注册中心，这个注册是抽象的，当没有注册中心设施时这个可以作为简易的注册中心
+在大多数场景可以作为席位注册管理，例如雪花算法给每个实例自动分配唯一的datacenterId, machineId。
+
+```java
+@Autowired
+private MysqlMybatisLockMapper lockMapper;
+@Autowired
+private MysqlMybatisRegistryMapper mapper;
+
+String name = "myservice";
+String identifier = "127.0.0.1:8080";
+String metadata = "{\"ts\":1000}";
+String info = "{\"ts2\":2000}";
+
+class MyRegistryListener implements RegistryListener {
+	public Integer index;
+	public Boolean leaseExpired;
+
+	@Override
+	public void onRegistered(Registration registration, Integer index) {
+		this.index = index;
+	}
+
+	@Override
+	public void onLeaseExpired(Registration registration) {
+		leaseExpired = true;
+	}
+}
+	
+MysqlMybatisRegistry mysqlMybatisRegistry = new MysqlMybatisRegistry(lockMapper, mapper, new MyRegistryListener());
+Registration registration = new Registration.Default(name, identifier, 30L, metadata, info);
+RegisterResult result = registry.register(registration);
+
+long datacenterId = SnowflakeSequenceManager.extractDatacenterId(result.getIndex());
+long machineId = SnowflakeSequenceManager.extractMachineId(result.getIndex());
+
+List<Registration> list = registry.listInstances(name);
+
+registry.deregister(registration);
+```
+
 ## 配置类
 NurseryMybatisProperties
 
