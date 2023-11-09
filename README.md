@@ -70,7 +70,10 @@ Connection connection = hbaseEnv.getConnection();
 ## 配置类 
 NurseryHBaseProperties
 
-# nursery-spring-boot-starter-kafka 自动化kafka可靠producer
+# nursery-spring-boot-starter-kafka
+
+## 一般作用
+可靠生产、消费，有序消费
 
 ## 自动注入
 ```java
@@ -203,7 +206,7 @@ NurseryRedisProperties
 
 自动化web的filter、异常handler
 
-# nursery-spring-boot-starter-zookeeper 自动化zk客户端
+# nursery-spring-boot-starter-zookeeper
 
 ## 自动注入
 ```java
