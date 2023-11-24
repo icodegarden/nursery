@@ -8,10 +8,16 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.http.codec.ServerCodecConfigurer;
+import org.springframework.http.codec.json.Jackson2JsonDecoder;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.reactive.DispatcherHandler;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.server.WebFilter;
 
 import com.alibaba.csp.sentinel.SphU;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.icodegarden.nursery.springboot.web.properties.NurseryWebProperties;
 import io.github.icodegarden.nursery.springboot.web.reactive.filter.ReactiveGatewayPreAuthenticatedAuthenticationFilter;
@@ -21,6 +27,7 @@ import io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveCon
 import io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveNativeRestApiExceptionHandler;
 import io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveSentinelAdaptiveApiResponseExceptionHandler;
 import io.github.icodegarden.nursery.springboot.web.reactive.handler.ReactiveSentinelAdaptiveNativeRestApiExceptionHandler;
+import io.github.icodegarden.nursery.springboot.web.util.MappingJackson2HttpMessageConverters;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,11 +38,23 @@ import lombok.extern.slf4j.Slf4j;
 @EnableConfigurationProperties({ NurseryWebProperties.class })
 @Configuration
 @Slf4j
-public class NurseryReactiveWebAutoConfiguration {
+public class NurseryReactiveWebAutoConfiguration implements WebFluxConfigurer {
 
 	public static final int FILTER_ORDER_PROCESSING_REQUEST_COUNT = Ordered.HIGHEST_PRECEDENCE;// 最高优先级
 	public static final int FILTER_ORDER_GATEWAY_PRE_AUTHENTICATED_AUTHENTICATION = FILTER_ORDER_PROCESSING_REQUEST_COUNT
 			+ 100;
+
+	/**
+	 * MappingJackson2HttpMessageConverter对ReactiveWeb不起作用
+	 */
+	@Override
+	public void configureHttpMessageCodecs(ServerCodecConfigurer configurer) {
+		MappingJackson2HttpMessageConverter converter = MappingJackson2HttpMessageConverters.simple();
+		ObjectMapper om = converter.getObjectMapper();
+
+		configurer.defaultCodecs().jackson2JsonEncoder(new Jackson2JsonEncoder(om));
+		configurer.defaultCodecs().jackson2JsonDecoder(new Jackson2JsonDecoder(om));
+	}
 
 	// ----------------------------------------------------------------------------------------
 
