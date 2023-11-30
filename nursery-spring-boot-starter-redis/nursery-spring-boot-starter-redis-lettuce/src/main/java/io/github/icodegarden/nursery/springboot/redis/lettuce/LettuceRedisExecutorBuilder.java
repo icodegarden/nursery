@@ -81,7 +81,8 @@ public class LettuceRedisExecutorBuilder {
 			return new LettuceRedisClientRedisExecutor(client);
 		}
 
-		return null;
+		throw new IllegalArgumentException(
+				NurseryRedisProperties.class.getSimpleName() + " cluster or pool is required.");
 	}
 
 	private static ClientResources buildClientResources(LettuceCommon common) {

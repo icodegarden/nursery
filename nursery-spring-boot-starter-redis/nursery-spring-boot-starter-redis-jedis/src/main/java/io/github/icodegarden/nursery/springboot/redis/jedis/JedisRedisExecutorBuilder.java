@@ -60,7 +60,8 @@ public class JedisRedisExecutorBuilder {
 			return new JedisPoolRedisExecutor(jp);
 		}
 
-		return null;
+		throw new IllegalArgumentException(
+				NurseryRedisProperties.class.getSimpleName() + " cluster or pool is required.");
 	}
 
 	private static void configGenericObjectPoolConfig(GenericObjectPoolConfig<?> genericObjectPoolConfig,
