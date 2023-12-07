@@ -40,6 +40,6 @@ public class ServerInitiatedImmediateSchedulersFactory implements Schedulers.Fac
 	 */
 	private boolean isServerInitiated() {
 		String name = Thread.currentThread().getName();
-		return "main".equals(name) || name.startsWith("reactor-http-nio");
+		return "main".equals(name) || name.startsWith("reactor-http");//reactor-http-epoll or reactor-http-nio
 	}
 }
