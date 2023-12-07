@@ -1,21 +1,15 @@
 package io.github.icodegarden.nursery.reactive.web.demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.ObjectPostProcessor;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.savedrequest.NoOpServerRequestCache;
 
 import io.github.icodegarden.nursery.springboot.web.reactive.security.ReactiveNativeRestApiAccessDeniedHandler;
 import io.github.icodegarden.nursery.springboot.web.reactive.security.ReactiveNativeRestApiAuthenticationEntryPoint;
+import reactor.netty.ReactorNetty;
 
 /**
  * @author Fangfang.Xu
@@ -48,9 +42,15 @@ public class SecurityConfiguration {
 		return http//
 //				.sessionManagement()//
 //				.sessionCreationPolicy(SessionCreationPolicy.NEVER)//
-		// .maximumSessions(32) // maximum number of concurrent sessions for one user
-		// .sessionRegistry(sessionRegistry)
-//				.and()//
+				// .maximumSessions(32) // maximum number of concurrent sessions for one user
+				// .sessionRegistry(sessionRegistry)
+				/**
+				 * IMPT引入security后请求将经过ServerRequestCacheWebFilter，其内部默认使用的是WebSessionServerRequestCache<br>
+				 * 使得进入Controller的线程不再是reactor-http-nio-*，而是parallel-*，导致ReactorNetty.IO_WORKER_COUNT等参数失效<br>
+				 * 因此需要配置不需要session NoOpServerRequestCache<br>
+				 */
+				.requestCache().requestCache(NoOpServerRequestCache.getInstance())//
+				.and()//
 				.exceptionHandling()//
 				.authenticationEntryPoint(new ReactiveNativeRestApiAuthenticationEntryPoint())//
 				.accessDeniedHandler(new ReactiveNativeRestApiAccessDeniedHandler())//

@@ -14,9 +14,16 @@ import reactor.core.publisher.Mono;
  */
 @RestController
 public class ApiController {
+	int i=0;
 
 	@GetMapping("/anonymous/v1/infos")
 	public Mono<ResponseEntity<Object>> info(ServerWebExchange exchange) {
+//		System.out.println(Thread.currentThread().getName());
+//		System.out.println(++i);
+//		try {
+//			Thread.sleep(99999999);
+//		} catch (InterruptedException e) {
+//		}
 		return Mono.just(ResponseEntity.ok("ok"));
 	}
 }
