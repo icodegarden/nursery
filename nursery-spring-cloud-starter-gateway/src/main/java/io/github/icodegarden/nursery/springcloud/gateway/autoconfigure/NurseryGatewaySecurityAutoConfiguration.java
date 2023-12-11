@@ -55,8 +55,6 @@ public class NurseryGatewaySecurityAutoConfiguration {
 	@Autowired
 	private NurseryGatewaySecurityProperties securityProperties;
 	@Autowired
-	private AuthMatcher authMatcher;
-	@Autowired
 	private ServerCodecConfigurer codecConfigurer;
 	@Autowired(required = false)
 	private AuthorizeExchangeSpecConfigurer authorizeExchangeSpecConfigurer;
@@ -79,6 +77,11 @@ public class NurseryGatewaySecurityAutoConfiguration {
 	private ServerAuthenticationSuccessHandler serverAuthenticationSuccessHandler;
 	@Autowired(required = false)
 	private ServerAuthenticationFailureHandler authenticationFailureHandler;
+
+	@Bean
+	public AuthMatcher authMatcher() {
+		return new AuthMatcher(securityProperties);
+	}
 
 	/**
 	 * 配置方式要换成 WebFlux的方式
@@ -118,7 +121,7 @@ public class NurseryGatewaySecurityAutoConfiguration {
 			Jwt jwt = securityProperties.getJwt();
 			log.info("gateway security config Authentication WebFilter by jwt:{}", jwt);
 
-			webFilter = new JWTAuthenticationWebFilter(authMatcher,
+			webFilter = new JWTAuthenticationWebFilter(authMatcher(),
 					authenticationManager != null ? authenticationManager : new NoOpReactiveAuthenticationManager(),
 					serverAuthenticationConverter != null ? serverAuthenticationConverter
 							: new JWTServerAuthenticationConverter(jwt.getSecretKey(), jwtTokenExtractor,
@@ -130,22 +133,22 @@ public class NurseryGatewaySecurityAutoConfiguration {
 		} else if (securityProperties.getSignature() != null) {
 			NurseryGatewaySecurityProperties.Signature signature = securityProperties.getSignature();
 			log.info("gateway security config Authentication WebFilter by signature:{}", signature);
-			SignatureAuthenticationConfig config = new SignatureAuthenticationConfig(
-					codecConfigurer, appProvider, openApiRequestValidator,
+			SignatureAuthenticationConfig config = new SignatureAuthenticationConfig(codecConfigurer, appProvider,
+					openApiRequestValidator,
 					authenticationManager != null ? authenticationManager : new NoOpReactiveAuthenticationManager(),
 					serverAuthenticationSuccessHandler != null ? serverAuthenticationSuccessHandler
 							: new AppServerAuthenticationSuccessHandler(appProvider, signature.getHeaderAppKey()),
 					authenticationFailureHandler != null ? authenticationFailureHandler
 							: new ApiResponseServerAuthenticationFailureHandler());
-			webFilter = new SignatureAuthenticationWebFilter(authMatcher, config);
+			webFilter = new SignatureAuthenticationWebFilter(authMatcher(), config);
 		} else {
 			log.info("gateway security config Authentication WebFilter by NoOp");
 			webFilter = new NoOpWebFilter();
 		}
 
 		authorizeExchangeSpec//
-		.and()//
-		.addFilterBefore(webFilter, SecurityWebFiltersOrder.AUTHORIZATION);
+				.and()//
+				.addFilterBefore(webFilter, SecurityWebFiltersOrder.AUTHORIZATION);
 
 		return httpSecurity.build();
 	}
