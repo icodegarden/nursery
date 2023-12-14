@@ -7,10 +7,11 @@ import org.springframework.util.Assert;
 import org.springframework.web.server.ServerWebExchange;
 
 /**
- * 
+ * @Deprecated see {@link io.github.icodegarden.nursery.springboot.web.util.matcher.OrRequestMatcher}
  * @author Fangfang.Xu
  *
  */
+@Deprecated
 public final class ReactiveOrRequestMatcher implements ReactiveRequestMatcher {
 
 	private final List<ReactiveRequestMatcher> requestMatchers;
