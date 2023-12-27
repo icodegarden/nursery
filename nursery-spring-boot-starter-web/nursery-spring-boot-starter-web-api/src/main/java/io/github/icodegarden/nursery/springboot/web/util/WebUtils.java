@@ -70,7 +70,7 @@ public class WebUtils extends BaseWebUtils {
 
 	public static String getHeader(String name) {
 		try {
-			return (String) GET_HEADER_METHOD.invoke(null);
+			return (String) GET_HEADER_METHOD.invoke(null, name);
 		} catch (Exception e) {
 			throw new IllegalStateException(e);
 		}
