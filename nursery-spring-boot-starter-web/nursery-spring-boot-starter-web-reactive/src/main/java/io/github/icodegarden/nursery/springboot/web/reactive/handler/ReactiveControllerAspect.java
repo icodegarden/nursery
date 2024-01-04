@@ -67,11 +67,14 @@ public class ReactiveControllerAspect implements InstantiationAwareBeanPostProce
 
 	/**
 	 * 因为reactor中的跨线程，WebFilter认证后即使设置到SecurityUtils，也无法在业务代码处获取认证。<br>
-	 * 所以需要使用ServerWebExchange先承载参数，在正式进controller前再设置到SecurityUtils，因为此时线程同步。<br>
+	 * 所以需要使用ServerWebExchange @see ReactiveGatewayPreAuthenticatedAuthenticationFilter 先承载参数，在正式进controller前再设置到SecurityUtils，因为此时线程同步。<br>
 	 * 注意使用@ControllerAdvice虽然原理差不多，但是有些情况下却会出现@ControllerAdvice中的线程和Controller中的线程不是相同的，依然无法达到目的。
 	 */
 	@Around("pointcut()")
 	public Object doInvoke(ProceedingJoinPoint pjp) throws Throwable {
+		SecurityUtils.setAuthentication(null);
+		ReactiveWebUtils.setExchange(null);
+		
 		Object[] args = pjp.getArgs();
 		for (Object arg : args) {
 			if (arg == null) {
@@ -90,8 +93,11 @@ public class ReactiveControllerAspect implements InstantiationAwareBeanPostProce
 
 					return pjp.proceed();
 				} finally {
-					SecurityUtils.setAuthentication(null);
-					ReactiveWebUtils.setExchange(null);
+					/**
+					 * 无效方式，因为pjp.proceed()异步的
+					 */
+//					SecurityUtils.setAuthentication(null);
+//					ReactiveWebUtils.setExchange(null);
 				}
 			}
 		}
