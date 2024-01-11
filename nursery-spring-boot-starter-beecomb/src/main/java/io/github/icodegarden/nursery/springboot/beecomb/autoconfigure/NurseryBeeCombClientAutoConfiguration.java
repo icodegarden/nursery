@@ -13,10 +13,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
 import io.github.icodegarden.beecomb.client.BeeCombClient;
+import io.github.icodegarden.beecomb.client.ClientProperties;
+import io.github.icodegarden.beecomb.client.ClientProperties.Exchange;
 import io.github.icodegarden.beecomb.client.UrlsBeeCombClient;
 import io.github.icodegarden.beecomb.client.UrlsClientProperties;
 import io.github.icodegarden.beecomb.client.ZooKeeperBeeCombClient;
 import io.github.icodegarden.beecomb.client.ZooKeeperClientProperties;
+import io.github.icodegarden.beecomb.client.ZooKeeperClientProperties.LoadBalance;
 import io.github.icodegarden.beecomb.client.security.Authentication;
 import io.github.icodegarden.beecomb.client.security.BasicAuthentication;
 import io.github.icodegarden.beecomb.common.properties.ZooKeeper;
@@ -51,6 +54,15 @@ public class NurseryBeeCombClientAutoConfiguration {
 			BeanUtils.copyProperties(zkProps, zooKeeper);
 
 			ZooKeeperClientProperties clientProperties = new ZooKeeperClientProperties(authentication, zooKeeper);
+
+			Exchange exchange = new ClientProperties.Exchange();
+			BeanUtils.copyProperties(beeCombClientProperties.getExchange(), exchange);
+			clientProperties.setExchange(exchange);
+
+			LoadBalance loadBalance = new ZooKeeperClientProperties.LoadBalance();
+			BeanUtils.copyProperties(beeCombClientProperties.getLoadBalance(), loadBalance);
+			clientProperties.setLoadBalance(loadBalance);
+
 			return new ZooKeeperBeeCombClient(clientProperties);
 		}
 
@@ -58,6 +70,11 @@ public class NurseryBeeCombClientAutoConfiguration {
 		if (StringUtils.hasText(master.getHttpHosts())) {
 			List<String> httpHosts = Arrays.asList(master.getHttpHosts().split(","));
 			UrlsClientProperties clientProperties = new UrlsClientProperties(authentication, httpHosts);
+			
+			Exchange exchange = new ClientProperties.Exchange();
+			BeanUtils.copyProperties(beeCombClientProperties.getExchange(), exchange);
+			clientProperties.setExchange(exchange);
+			
 			return new UrlsBeeCombClient(clientProperties);
 		}
 
