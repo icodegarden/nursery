@@ -8,7 +8,6 @@ import org.springframework.security.web.server.util.matcher.OrServerWebExchangeM
 import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher.MatchResult;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
 import io.github.icodegarden.nursery.springcloud.gateway.properties.NurseryGatewaySecurityProperties;
@@ -21,7 +20,6 @@ import reactor.core.scheduler.Schedulers;
  * @author Fangfang.Xu
  *
  */
-@Component
 public class AuthMatcher {
 
 	private final ServerWebExchangeMatcher authMatcher;
