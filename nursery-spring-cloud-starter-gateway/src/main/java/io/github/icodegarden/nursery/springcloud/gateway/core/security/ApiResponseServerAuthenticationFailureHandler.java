@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 /**
+ * 把openapi、internalApi的AuthenticationException统一处理转换成ApiResponse
  * 
  * @author Fangfang.Xu
  *
@@ -43,13 +44,16 @@ public class ApiResponseServerAuthenticationFailureHandler implements ServerAuth
 		public ApiResponse build(ServerWebExchange exchange, ErrorCodeException ece) {
 			OpenApiRequestBody requestBody = NurseryGatewayUtils.getOpenApiRequestBody(exchange);
 			if (requestBody != null) {
+				/**
+				 * openapi
+				 */
 				OpenApiResponse openApiResponse = OpenApiResponse.fail(requestBody.getMethod(), ece);
 
-				/**
-				 * response签名
-				 */
 				App app = NurseryGatewayUtils.getApp(exchange);
 				if (app != null) {
+					/**
+					 * response签名
+					 */
 					if (log.isInfoEnabled()) {
 						log.info("Authentication Failure, app_name:{}, request_id:{}, {}", app.getAppName(),
 								requestBody.getRequest_id(), ece.getMessage());
@@ -60,6 +64,9 @@ public class ApiResponseServerAuthenticationFailureHandler implements ServerAuth
 				}
 				return openApiResponse;
 			} else {
+				/**
+				 * api
+				 */
 				return InternalApiResponse.fail(ece);
 			}
 		}
