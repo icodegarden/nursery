@@ -47,6 +47,9 @@ public class AuthMatcher {
 	 * 因为历史开放接口可能不是按规范来的，则交给下游服务自行处理
 	 */
 	public boolean isAuthPath(ServerWebExchange exchange) {
+		if(authMatcher == null) {
+			return false;
+		}
 		AtomicReference<Boolean> match = new AtomicReference<Boolean>();
 		Mono<MatchResult> mono = authMatcher.matches(exchange);
 		mono.subscribeOn(Schedulers.immediate());

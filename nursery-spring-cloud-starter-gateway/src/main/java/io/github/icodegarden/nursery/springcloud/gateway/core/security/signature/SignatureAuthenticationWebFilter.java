@@ -78,12 +78,12 @@ public class SignatureAuthenticationWebFilter implements AuthWebFilter {
 
 		authenticationWebFilter.setServerAuthenticationConverter(new AppServerAuthenticationConverter());
 
-		authenticationWebFilter.setAuthenticationSuccessHandler(config.getServerAuthenticationSuccessHandler());
+		authenticationWebFilter.setAuthenticationSuccessHandler(config.getAuthenticationSuccessHandler());
 
 		/**
 		 * 需要设置，默认使用的是HttpBasicServerAuthenticationEntryPoint
 		 */
-		authenticationWebFilter.setAuthenticationFailureHandler(config.getServerAuthenticationFailureHandler());
+		authenticationWebFilter.setAuthenticationFailureHandler(config.getAuthenticationFailureHandler());
 	}
 
 	@Override

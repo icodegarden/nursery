@@ -25,16 +25,16 @@ public class JWTAuthenticationWebFilter implements AuthWebFilter {
 	private final AuthenticationWebFilter authenticationWebFilter;
 
 	public JWTAuthenticationWebFilter(AuthMatcher authMatcher, ReactiveAuthenticationManager authenticationManager,
-			ServerAuthenticationConverter serverAuthenticationConverter,
-			ServerAuthenticationSuccessHandler serverAuthenticationSuccessHandler,
+			ServerAuthenticationConverter authenticationConverter,
+			ServerAuthenticationSuccessHandler authenticationSuccessHandler,
 			ServerAuthenticationFailureHandler authenticationFailureHandler) {
 		this.authMatcher = authMatcher;
 
 		authenticationWebFilter = new AuthenticationWebFilter(authenticationManager);
 
-		authenticationWebFilter.setServerAuthenticationConverter(serverAuthenticationConverter);
+		authenticationWebFilter.setServerAuthenticationConverter(authenticationConverter);
 
-		authenticationWebFilter.setAuthenticationSuccessHandler(serverAuthenticationSuccessHandler);
+		authenticationWebFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
 
 		/**
 		 * 需要设置，默认使用的是HttpBasicServerAuthenticationEntryPoint

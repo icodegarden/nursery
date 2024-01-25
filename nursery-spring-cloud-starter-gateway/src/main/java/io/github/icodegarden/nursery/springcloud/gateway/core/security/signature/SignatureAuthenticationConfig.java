@@ -23,18 +23,18 @@ public class SignatureAuthenticationConfig {
 	private AppProvider appProvider;
 	private OpenApiRequestValidator openApiRequestValidator;
 	private ReactiveAuthenticationManager authenticationManager;
-	private ServerAuthenticationSuccessHandler serverAuthenticationSuccessHandler;
-	private ServerAuthenticationFailureHandler serverAuthenticationFailureHandler;
+	private ServerAuthenticationSuccessHandler authenticationSuccessHandler;
+	private ServerAuthenticationFailureHandler authenticationFailureHandler;
 
 	public SignatureAuthenticationConfig(ServerCodecConfigurer codecConfigurer, AppProvider appProvider,
 			OpenApiRequestValidator openApiRequestValidator, ReactiveAuthenticationManager authenticationManager,
-			ServerAuthenticationSuccessHandler serverAuthenticationSuccessHandler,
-			ServerAuthenticationFailureHandler serverAuthenticationFailureHandler) {
+			ServerAuthenticationSuccessHandler authenticationSuccessHandler,
+			ServerAuthenticationFailureHandler authenticationFailureHandler) {
 		this.codecConfigurer = codecConfigurer;
 		this.appProvider = appProvider;
 		this.openApiRequestValidator = openApiRequestValidator;
 		this.authenticationManager = authenticationManager;
-		this.serverAuthenticationSuccessHandler = serverAuthenticationSuccessHandler;
-		this.serverAuthenticationFailureHandler = serverAuthenticationFailureHandler;
+		this.authenticationSuccessHandler = authenticationSuccessHandler;
+		this.authenticationFailureHandler = authenticationFailureHandler;
 	}
 }
