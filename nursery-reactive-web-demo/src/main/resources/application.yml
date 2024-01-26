@@ -1,13 +1,13 @@
 ---
 #management.server.address: 127.0.0.1
-management.server.port: 8081
+management.server.port: 9089
 #management.endpoint.shutdown.enabled: true
 management.endpoints.web.exposure.include: health,loggers
 
 springfox.documentation.enabled: true
 
 server:
-  port: 8080
+  port: 9090
 spring:
   application:
     name: nursery-reactive-web-demo

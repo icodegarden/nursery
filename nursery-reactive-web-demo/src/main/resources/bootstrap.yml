@@ -13,5 +13,6 @@ spring:
         username: nacos
         password: otanacos01
 #        namespace: 7eeef4c2-4b9e-4363-82a2-f0effab3b128
+        ip: localhost
   application:
     name: nursery-reactive-web-demo

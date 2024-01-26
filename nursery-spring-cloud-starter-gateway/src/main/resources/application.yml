@@ -1,5 +1,6 @@
 ---
 #management.server.address: 127.0.0.1
+management.server.port: 8079
 #management.endpoint.shutdown.enabled: true
 management.endpoints.web.exposure.include: loggers,health,readiness
 

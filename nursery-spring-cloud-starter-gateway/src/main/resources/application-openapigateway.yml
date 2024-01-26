@@ -14,7 +14,7 @@ spring:
       routes:
 #--------------------------------------------------------------------------------------      
       - id: metadatas_system_route
-        uri: lb://commons-test-web
+        uri: lb://nursery-reactive-web-demo
         predicates:
         - Path=/openapi/v1/biz/methods
         - BodyMethod=consumer.metadata.system
@@ -57,7 +57,7 @@ icodegarden:
             - consumer.metadata.datafilters
           - appId: dev_ota_cn_appid
             appKey: 100ota-cn001
-            appName: 开发环境OTA中国
+            appName: dev-OTA-cn
             methods:
             - consumer.metadata.system
             - consumer.metadata.kafka
@@ -66,7 +66,7 @@ icodegarden:
             - software.url.receive    
           - appId: dev_ota_eu_appid
             appKey: 200ota-eu002
-            appName: 开发环境OTA欧洲
+            appName: dev-OTA-eu
             methods:
             - consumer.metadata.system
             - consumer.metadata.kafka
