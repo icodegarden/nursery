@@ -89,15 +89,26 @@ public class OpenApiModifyResponseBodyGatewayFilterFactory
 		private RewriteFunction rewriteFunction = (exchange, value) -> {
 			OpenApiResponse openApiResponse = JsonUtils.deserialize((String) value, OpenApiResponse.class);
 
-			/**
-			 * 没有code值说明只返回了biz_content，说明是业务成功，设置biz_content
-			 */
-			if (!StringUtils.hasText(openApiResponse.getCode())) {
+//			/**
+//			 * 没有code值说明只返回了biz_content，说明是业务成功，设置biz_content
+//			 */
+//			if (!StringUtils.hasText(openApiResponse.getCode())) {
+//				openApiResponse = OpenApiResponse.success(null, (String) value);
+//			} else {
+//				/**
+//				 * 否则说明返回了整体的，无论业务成功还是失败都不需要额外处理
+//				 */
+//			}
+
+			if (StringUtils.hasText(openApiResponse.getCode()) && StringUtils.hasText(openApiResponse.getMsg())
+					&& StringUtils.hasText(openApiResponse.getSub_code())
+					&& StringUtils.hasText(openApiResponse.getSub_msg())) {
+				// 表示失败，无需处理
+			} else if (!StringUtils.hasText(openApiResponse.getBiz_content())) {
+				// 成功但没有biz_content
 				openApiResponse = OpenApiResponse.success(null, (String) value);
 			} else {
-				/**
-				 * 否则说明返回了整体的，无论业务成功还是失败都不需要额外处理
-				 */
+				// 成功且有biz_content，无需处理
 			}
 
 			return Mono.just(JsonUtils.serialize(openApiResponse));
