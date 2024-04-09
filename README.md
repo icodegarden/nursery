@@ -3,7 +3,8 @@
 符合springboot/cloud组件规范的微服务框架，可选任意组件搭配使用
 版本管理使用nursery-spring-boot-dependencies、nursery-spring-cloud-dependencies，自动管理springboot/cloud和alibaba-spring-cloud的版本
 
-
+# 整体架构
+![Architecture](./imgs/整体架构.png)
 
 # nursery-spring-boot-starter 
 
