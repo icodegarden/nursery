@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>io.github.icodegarden</groupId>
 		<artifactId>nursery</artifactId>
-		<version>3.0.0</version>
+		<version>3.0.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>nursery-spring-boot-starter-mybatis</artifactId>
@@ -21,7 +21,7 @@
 		<dependency>
             <groupId>io.github.icodegarden</groupId>
             <artifactId>nursery-spring-boot-starter</artifactId>
-            <version>3.0.0</version><!-- 基础必须 -->
+            <version>3.0.1</version><!-- 基础必须 -->
         </dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
