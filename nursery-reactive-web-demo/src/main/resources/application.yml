@@ -4,7 +4,11 @@ management.server.port: 9089
 #management.endpoint.shutdown.enabled: true
 management.endpoints.web.exposure.include: health,loggers
 
-springfox.documentation.enabled: true
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
 
 server:
   port: 9090
