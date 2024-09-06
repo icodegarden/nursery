@@ -4,6 +4,7 @@ management.server.port: 8081
 #management.health.elasticsearch.enabled: false #可以对指定的组件进行检测关闭 ElasticsearchRestHealthContributorAutoConfiguration
 #management.endpoint.shutdown.enabled: true
 management.endpoints.web.exposure.include: health,loggers
+management.health.elasticsearch.enabled: false
 
 mybatis.mapper-locations: classpath*:mapper/*Mapper.xml
 
