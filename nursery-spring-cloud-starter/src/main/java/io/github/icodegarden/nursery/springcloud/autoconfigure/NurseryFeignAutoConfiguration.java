@@ -14,6 +14,7 @@ import feign.RequestInterceptor;
 import io.github.icodegarden.nursery.springboot.security.SecurityUtils;
 import io.github.icodegarden.nursery.springboot.web.util.BaseWebUtils;
 import io.github.icodegarden.nursery.springboot.web.util.WebUtils;
+import io.github.icodegarden.nursery.springcloud.loadbalancer.FlowTagLoadBalancer;
 import io.github.icodegarden.nursery.springcloud.properties.NurseryFeignProperties;
 import lombok.extern.slf4j.Slf4j;
 
@@ -72,5 +73,14 @@ public class NurseryFeignAutoConfiguration implements RequestInterceptor {
 
 		template.header(WebUtils.HEADER_USERID, userId);
 		template.header(WebUtils.HEADER_USERNAME, username);
+
+		String tag = WebUtils.getHeader(FlowTagLoadBalancer.HTTPHEADER_FLOWTAG_REQUIRED);
+		if (tag != null) {
+			template.header(FlowTagLoadBalancer.HTTPHEADER_FLOWTAG_REQUIRED, tag);
+		}
+		tag = WebUtils.getHeader(FlowTagLoadBalancer.HTTPHEADER_FLOWTAG_FIRST);
+		if (tag != null) {
+			template.header(FlowTagLoadBalancer.HTTPHEADER_FLOWTAG_FIRST, tag);
+		}
 	}
 }
