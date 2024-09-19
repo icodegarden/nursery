@@ -56,6 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NurseryCacheAutoConfiguration {
 
+	@ConditionalOnProperty(value = "icodegarden.nursery.cacheManager.enabled", havingValue = "true", matchIfMissing = true)
 	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass(AbstractTransactionSupportingCacheManager.class)
 	@AutoConfigureAfter(RedisCacherAutoConfiguration.class)
