@@ -6,3 +6,4 @@
 
 # 3.0.2
 * 优化ES查询
+* cache支持spring注解

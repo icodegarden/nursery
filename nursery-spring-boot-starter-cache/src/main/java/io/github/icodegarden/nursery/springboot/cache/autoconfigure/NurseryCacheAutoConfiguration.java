@@ -11,6 +11,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.transaction.AbstractTransactionSupportingCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEventPublisher;
@@ -23,8 +26,10 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.CollectionUtils;
 
+import io.github.icodegarden.nursery.springboot.cache.NurseryCacheManager;
 import io.github.icodegarden.nursery.springboot.cache.RemoveCacheEvent;
 import io.github.icodegarden.nursery.springboot.cache.SpringApplicationCacher;
+import io.github.icodegarden.nursery.springboot.cache.properties.NurseryCacheProperties;
 import io.github.icodegarden.nutrient.lang.filter.TrustFilter;
 import io.github.icodegarden.nutrient.lang.serialization.Deserializer;
 import io.github.icodegarden.nutrient.lang.serialization.Hessian2Deserializer;
@@ -45,11 +50,24 @@ import lombok.extern.slf4j.Slf4j;
 @AutoConfigureAfter(name = {
 		"io.github.icodegarden.nursery.springboot.redis.lettuce.autoconfigure.NurseryRedisLettuceAutoConfiguration",
 		"io.github.icodegarden.nursery.springboot.redis.jedis.autoconfigure.NurseryRedisJedisAutoConfiguration",
-		"io.github.icodegarden.nursery.springboot.redis.spring.autoconfigure.NurseryRedisSpringAutoConfiguration",
-}) // 顺序依赖
+		"io.github.icodegarden.nursery.springboot.redis.spring.autoconfigure.NurseryRedisSpringAutoConfiguration", }) // 顺序依赖
+@EnableConfigurationProperties(NurseryCacheProperties.class)
 @Configuration
 @Slf4j
 public class NurseryCacheAutoConfiguration {
+
+	@Configuration(proxyBeanMethods = false)
+	@ConditionalOnClass(AbstractTransactionSupportingCacheManager.class)
+	@AutoConfigureAfter(RedisCacherAutoConfiguration.class)
+	@ConditionalOnBean(Cacher.class)
+	@ConditionalOnMissingBean(CacheManager.class)
+	class RedisCacheConfiguration {
+		@Bean
+		NurseryCacheManager cacheManager(Cacher cacher, NurseryCacheProperties properties) {
+			log.info("nursery init bean of NurseryCacheManager");
+			return new NurseryCacheManager(cacher, properties);
+		}
+	}
 
 	@ConditionalOnBean(RedisExecutor.class) // 依赖项
 	@ConditionalOnClass({ Cacher.class })
