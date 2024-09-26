@@ -4,6 +4,12 @@ management.server.port: 8079
 #management.endpoint.shutdown.enabled: true
 management.endpoints.web.exposure.include: loggers,health,readiness
 
+icodegarden:
+  nursery:
+    endpoint:
+      readiness:
+        enabled: true
+
 server: #org.springframework.boot.autoconfigure.web.ServerProperties , gateway使用的是 NettyReactiveWebServerFactory来创建WebServer
   port: 8080
   shutdown: graceful
