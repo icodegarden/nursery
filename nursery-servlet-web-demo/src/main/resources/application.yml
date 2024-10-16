@@ -1,6 +1,6 @@
 ---
 #management.server.address: 127.0.0.1
-management.server.port: 8081
+management.server.port: 18079
 #management.health.elasticsearch.enabled: false #可以对指定的组件进行检测关闭 ElasticsearchRestHealthContributorAutoConfiguration
 #management.endpoint.shutdown.enabled: true
 management.endpoints.web.exposure.include: health,loggers
@@ -20,7 +20,7 @@ springdoc:
     enabled: true
 
 server:
-  port: 8080
+  port: 18080
 #  max-http-header-size: 8192 #默认8k
 #  tomcat: 
 #    threads:
@@ -50,7 +50,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://192.168.184.129:3306/nursery_servlet_web_demo?setUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&allowMultiQueries=true
+    url: jdbc:mysql://192.168.29.159:3306/nursery_servlet_web_demo?setUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&allowMultiQueries=true
     username: root
     password: 123456
     hikari:
@@ -136,6 +136,14 @@ icodegarden:
       producer:
         keySerializer: org.apache.kafka.common.serialization.StringSerializer
         valueSerializer: org.apache.kafka.common.serialization.StringSerializer
+      consumers:
+      - keyDeserializer: org.apache.kafka.common.serialization.StringDeserializer
+        valueDeserializer: org.apache.kafka.common.serialization.StringDeserializer
+        groupId: nursery-servlet-web-demo
+        clientId: xff
+        reliabilityHandlerBeanName: demoReliabilityHandler
+        topics:
+        - nursery-demo
     zookeeper:
       connectString: 127.0.0.1:2181      
     beecomb:

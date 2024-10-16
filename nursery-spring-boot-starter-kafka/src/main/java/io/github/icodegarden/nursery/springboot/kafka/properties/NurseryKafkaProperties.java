@@ -1,5 +1,6 @@
 package io.github.icodegarden.nursery.springboot.kafka.properties;
 
+import java.util.List;
 import java.util.Properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,13 +25,13 @@ public class NurseryKafkaProperties implements Validateable {
 
 	@NonNull
 	private String bootstrapServers;// 172.22.122.27:9092,172.22.122.28:9092
-	@NonNull
 	private Producer producer;
+	private List<Consumer> consumers;
 
 	@Override
 	public void validate() throws IllegalArgumentException {
 		Assert.hasText(bootstrapServers, "bootstrapServers must not empty");
-		Assert.notNull(producer, "producer must not null");
+//		Assert.notNull(producer, "producer must not null");
 	}
 
 	@Getter
@@ -54,4 +55,36 @@ public class NurseryKafkaProperties implements Validateable {
 		}
 	}
 
+	@Getter
+	@Setter
+	@ToString
+	public static class Consumer implements Validateable {
+		@NonNull
+		private String keyDeserializer;//org.apache.kafka.common.serialization.StringDeserializer
+		@NonNull
+		private String valueDeserializer;//org.apache.kafka.common.serialization.StringDeserializer
+		@NonNull
+		private String groupId;
+		@NonNull
+		private List<String> topics;
+		
+		private String clientId;
+		
+		@NonNull
+		private String reliabilityHandlerBeanName;
+		
+		/**
+		 * 其他kafka props
+		 */
+		private Properties props = new Properties();
+
+		@Override
+		public void validate() throws IllegalArgumentException {
+			Assert.hasText(keyDeserializer, "keyDeserializer must not empty");
+			Assert.hasText(valueDeserializer, "valueDeserializer must not empty");
+			Assert.hasText(groupId, "groupId must not empty");
+			Assert.notEmpty(topics, "topics must not empty");
+			Assert.hasText(reliabilityHandlerBeanName, "reliabilityHandlerBeanName must not empty");
+		}
+	}
 }
