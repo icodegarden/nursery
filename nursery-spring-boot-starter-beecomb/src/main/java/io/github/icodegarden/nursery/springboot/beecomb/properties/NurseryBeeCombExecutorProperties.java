@@ -19,6 +19,8 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class NurseryBeeCombExecutorProperties extends ZooKeeperSupportInstanceProperties {
 
+	private String executorName;
+	
 	public NurseryBeeCombExecutorProperties() {
 		super(new ZooKeeper());
 	}
