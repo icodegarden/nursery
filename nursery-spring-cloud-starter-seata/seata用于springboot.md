@@ -140,7 +140,7 @@
 	linux ./bin/seata-server.sh 或 ./bin/seata-server.sh -p 8091 -h 127.0.0.1 -m file
 	windows bin\seata-server.bat  		
 ##打开web	          
-	http://localhost:7091
+	http://localhost:7091 默认用户seata/seata
 	seata-server会起2个端口，7091是web，8091是client rpc
 
 ##docker

@@ -4,7 +4,10 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient("commons-test-web")
+/**
+ * @author Fangfang.Xu
+ */
+@FeignClient("nursery-servlet-web-demo")
 public interface SelfFeign {
 
 	@GetMapping("feign/at")
