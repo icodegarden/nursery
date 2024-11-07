@@ -88,7 +88,7 @@ seata: #io.seata.spring.boot.autoconfigure.properties.SeataProperties
       server-addr: 172.22.122.27:8848
       username: nacos
       password: otanacos01
-#      namespace: 7eeef4c2-4b9e-4363-82a2-f0effab3b128
+      namespace: seata
 #      group: SEATA_GROUP
 #      cluster: default
 #      context-path:

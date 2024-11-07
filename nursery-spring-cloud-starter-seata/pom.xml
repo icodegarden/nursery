@@ -24,7 +24,7 @@
 			<version>3.0.1</version>
 		</dependency><!-- 基础必须 -->
 		<dependency>
-		    <groupId>io.seata</groupId>
+		    <groupId>org.apache.seata</groupId>
 		    <artifactId>seata-spring-boot-starter</artifactId>
 		    <version>${seata.version}</version>
 		</dependency>

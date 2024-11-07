@@ -209,6 +209,139 @@
 	        group = "SEATA_GROUP"
 	      }
 	    }
+	    
+##k8s nacos配置不起作用	    
+	截至2.2.0官方的k8s部署方式并不起作用，其原因是只要部署包含有application.yml文件(容器或本地都是这样)，外部配置就不起作用，他优先读的都是本地的application.yml，所以在k8s使用上述configMap来使用nacos是不起作用的。
+	解决办法是使用configMap，把本地的application.yml整个都替换了，才能达到使用nacos、配置db的效果。
+	apiVersion: apps/v1
+	kind: Deployment
+	metadata:
+	  name: seata-server
+	  namespace: ssp-dev
+	  labels:
+	    k8s-app: seata-server
+	spec:
+	  replicas: 1
+	  selector:
+	    matchLabels:
+	      k8s-app: seata-server
+	  template:
+	    metadata:
+	      labels:
+	        k8s-app: seata-server
+	    spec:
+	      containers:
+	        - name: seata-server
+	          image: 'harbor.test.geely.com/star/icodegarden/seata-server:2.0.0'
+	          imagePullPolicy: IfNotPresent
+	          env:
+	            - name: TZ
+	              value: Asia/Shanghai			  
+	          ports:
+	            - name: http
+	              containerPort: 8091
+	              protocol: TCP
+	          volumeMounts:
+	            - name: seata-config
+	              mountPath: /seata-server/resources/application.yml
+	              subPath: application.yml #必须的，指定只覆盖application.yml文件
+	      volumes:
+	        - name: seata-config
+	          configMap:
+	            name: seata-server-config-yml	
+	      imagePullSecrets:
+	        - name: devops-pull-secret	
+	
+	
+	apiVersion: v1  
+	kind: ConfigMap  
+	metadata:  
+	  name: my-app-config  
+	data:  
+	  application.yml: |  
+	    server:
+	      port: 7091
+	
+	    spring:
+	      application:
+	        name: seata-server
+	    logging:
+	      config: classpath:logback-spring.xml
+	      file:
+	        path: ${log.home:${user.home}/logs/seata}
+	      extend:
+	        logstash-appender:
+	          destination: 127.0.0.1:4560
+	        kafka-appender:
+	          bootstrap-servers: 127.0.0.1:9092
+	          topic: logback_to_logstash
+	          
+	    console:
+	      user:
+	        username: seata
+	        password: seata
+	    seata:
+	      registry:
+	        # support: nacos 、 eureka 、 redis 、 zk  、 consul 、 etcd3 、 sofa
+	        type: nacos
+	        preferred-networks: 30.240.*
+	        nacos:
+	          application: seata-server
+	          server-addr: 172.22.122.27:8848
+	          #group: SEATA_GROUP
+	          namespace: seata
+	          cluster: default
+	          username: nacos
+	          password: otanacos01
+	          context-path:
+	          ##if use MSE Nacos with auth, mutex with username/password attribute
+	          #access-key:
+	          #secret-key:
+	      config:
+	        # support: nacos, consul, apollo, zk, etcd3
+	        type: file
+	        nacos:
+	          server-addr: 172.22.122.27:8848
+	          namespace: seata
+	          #group: SEATA_GROUP
+	          context-path:
+	          ##1.The following configuration is for the open source version of Nacos
+	          username: nacos
+	          password: otanacos01
+	          ##2.The following configuration is for the MSE Nacos on aliyun
+	          #access-key:
+	          #secret-key:
+	          ##3.The following configuration is used to deploy on Aliyun ECS or ACK without authentication
+	          #ram-role-name:
+	          data-id: seata-server    
+	      store:
+	        # support: file 、 db 、 redis
+	        mode: db
+	        db:
+	          datasource: druid
+	          db-type: mysql
+	          driver-class-name: com.mysql.jdbc.Driver
+	          url: jdbc:mysql://192.168.29.160:3306/seata?rewriteBatchedStatements=true
+	          user: root
+	          password: 123456
+	          min-conn: 10
+	          max-conn: 100
+	          global-table: global_table
+	          branch-table: branch_table
+	          lock-table: lock_table
+	          distributed-lock-table: distributed_lock
+	          vgroup-table: vgroup_table
+	          query-limit: 1000
+	          max-wait: 5000    
+	      security:
+	        secretKey: SeataSecretKey0c382ef121d778043159209298fd40bf3850a017
+	        tokenValidityInMilliseconds: 1800000
+	        csrf-ignore-urls: /metadata/v1/**
+	        ignore:
+	          urls: /,/**/*.css,/**/*.js,/**/*.html,/**/*.map,/**/*.svg,/**/*.png,/**/*.jpeg,/**/*.ico,/api/v1/auth/login,/version.json,/health,/error,/vgroup/v1/**
+	          
+	    
+		    
 
 #应用服务（TM/RM）
 ##引入依赖

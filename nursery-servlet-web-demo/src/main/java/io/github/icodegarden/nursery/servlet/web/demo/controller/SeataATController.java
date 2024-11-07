@@ -1,5 +1,7 @@
 package io.github.icodegarden.nursery.servlet.web.demo.controller;
 
+import org.apache.seata.core.context.RootContext;
+import org.apache.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,8 +12,6 @@ import io.github.icodegarden.nursery.servlet.web.demo.feign.SelfFeign;
 import io.github.icodegarden.nursery.servlet.web.demo.mapper.ConsumerSystemMapper;
 import io.github.icodegarden.nursery.servlet.web.demo.pojo.persistence.ConsumerSystemPO;
 import io.github.icodegarden.nutrient.lang.util.SystemUtils;
-import io.seata.core.context.RootContext;
-import io.seata.spring.annotation.GlobalTransactional;
 
 /**
  * 

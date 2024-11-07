@@ -2,18 +2,19 @@ package io.github.icodegarden.nursery.servlet.web.demo.service;
 
 import java.util.Map;
 
+import org.apache.seata.core.context.RootContext;
+import org.apache.seata.rm.tcc.api.BusinessActionContext;
+import org.apache.seata.rm.tcc.api.BusinessActionContextParameter;
+import org.apache.seata.rm.tcc.api.LocalTCC;
+import org.apache.seata.rm.tcc.api.TwoPhaseBusinessAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.github.icodegarden.nursery.servlet.web.demo.feign.SelfFeign;
 import io.github.icodegarden.nursery.servlet.web.demo.mapper.ConsumerSystemMapper;
 import io.github.icodegarden.nursery.servlet.web.demo.pojo.persistence.ConsumerSystemPO;
+import io.github.icodegarden.nursery.servlet.web.demo.pojo.transfer.TccDTO;
 import io.github.icodegarden.nutrient.lang.util.SystemUtils;
-import io.seata.core.context.RootContext;
-import io.seata.rm.tcc.api.BusinessActionContext;
-import io.seata.rm.tcc.api.BusinessActionContextParameter;
-import io.seata.rm.tcc.api.LocalTCC;
-import io.seata.rm.tcc.api.TwoPhaseBusinessAction;
 
 /**
  * 
@@ -30,15 +31,14 @@ public class TccService {
 
 	@TwoPhaseBusinessAction(name = "tcc1", commitMethod = "tcc1commit", rollbackMethod = "tcc1rollback", useTCCFence = false) // 可以在接口上
 //		@Transactional
-	public ConsumerSystemPO tcc1(@BusinessActionContextParameter(paramName = "id") Long id,
-			@BusinessActionContextParameter(paramName = "name") String name) throws Exception {
+	public ConsumerSystemPO tcc1(@BusinessActionContextParameter(paramName = "dto") TccDTO dto) throws Exception {
 		selfFeign.feignTCC();
 
 		System.out.println("request seata TCC, xid:" + RootContext.getXID());
 
 		ConsumerSystemPO po = new ConsumerSystemPO();
-		po.setId(id);
-		po.setName(name);
+		po.setId(dto.getId());
+		po.setName(dto.getName());
 		po.setAppId(System.currentTimeMillis() + "");
 		po.setEmail("e");
 		po.setSaslPassword("aaa");
@@ -69,19 +69,19 @@ public class TccService {
 		Map<String, Object> actionContext = context.getActionContext();
 		System.out.println(actionContext);
 
-		Object id = actionContext.get("id");
-		consumerSystemMapper.delete((Long) id);
+		Map dto = (Map)actionContext.get("dto");
+		System.out.println(dto);
+		consumerSystemMapper.delete(dto.get("id"));
 	}
 
 	@TwoPhaseBusinessAction(name = "tcc2", commitMethod = "tcc2commit", rollbackMethod = "tcc2rollback", useTCCFence = false)
 //		@Transactional
-	public ConsumerSystemPO tcc2(@BusinessActionContextParameter(paramName = "id") Long id,
-			@BusinessActionContextParameter(paramName = "name") String name) throws Exception {
+	public ConsumerSystemPO tcc2(@BusinessActionContextParameter(paramName = "dto") TccDTO dto) throws Exception {
 		System.out.println("request feign TCC, xid:" + RootContext.getXID());
 
 		ConsumerSystemPO po = new ConsumerSystemPO();
-		po.setId(id);
-		po.setName(name);
+		po.setId(dto.getId());
+		po.setName(dto.getName());
 		po.setAppId(System.currentTimeMillis() + "");
 		po.setEmail("e");
 		po.setSaslPassword("aaa");
@@ -109,7 +109,8 @@ public class TccService {
 		Map<String, Object> actionContext = context.getActionContext();
 		System.out.println(actionContext);
 
-		Object id = actionContext.get("id");
-		consumerSystemMapper.delete((Long) id);
+		Map dto = (Map)actionContext.get("dto");
+		System.out.println(dto);
+		consumerSystemMapper.delete(dto.get("id"));
 	}
 }
