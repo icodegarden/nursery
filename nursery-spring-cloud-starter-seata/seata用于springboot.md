@@ -1,13 +1,14 @@
 #官方文档
-	http://seata.io/zh-cn/docs/overview/what-is-seata.html
+	https://seata.apache.org/zh-cn/docs/overview/what-is-seata
 #github
-	https://github.com/seata/seata
+	https://github.com/apache/incubator-seata
 #使用例子
-	https://github.com/seata/seata-samples
+	https://github.com/apache/incubator-seata-samples
 
-#部署server（TC）
+#部署seata-server（TC）
 ##下载解压
-	https://github.com/seata/seata/releases 下载  seata-server-1.7.0.zip 解压
+	https://seata.apache.org/zh-cn/unversioned/download/seata-server 下载 apache-seata-2.2.0-incubating-bin.tar.gz 解压
+	或 https://github.com/apache/incubator-seata/releases （最新版可能只有源码可下载了）
 ##使用注册中心
 	修改conf/application.yml ， 有application.example.yml可参考
 	
@@ -17,8 +18,8 @@
 	    nacos:
 	      application: seata-server
 	      server-addr: 172.22.122.27:8848
-	      #group: SEATA_GROUP
-	      #namespace:
+	      group: DEFAULT_GROUP
+	      namespace: seata
 	      #cluster: default
 	      #username:
 	      #password:
@@ -34,7 +35,8 @@
 	    type: nacos
 	    nacos:
 	      server-addr: 172.22.122.27:8848
-	      #group: SEATA_GROUP
+	      group: DEFAULT_GROUP
+	      namespace: seata
 	      #username:
 	      #password:
 	      #context-path:
@@ -46,7 +48,23 @@
 	修改conf/application.yml ， 有application.example.yml可参考
 	seata:
 	  store:
-	    redis:
+	    db:
+	      datasource: druid
+	      db-type: mysql
+	      driver-class-name: com.mysql.jdbc.Driver
+	      url: jdbc:mysql://192.168.29.160:3306/seata?rewriteBatchedStatements=true
+	      user: root
+	      password: 123456
+	      min-conn: 10
+	      max-conn: 100
+	      global-table: global_table
+	      branch-table: branch_table
+	      lock-table: lock_table
+	      distributed-lock-table: distributed_lock_table
+	      vgroup-table: vgroup_table
+	      query-limit: 1000
+	      max-wait: 5000    	  
+	    redis: #到2.2.0仅支持单机、sentinel，不支持cluster，官方说lua、pipeline不支持cluster
 	      mode: single
 	      database: 0
 	      min-conn: 10
@@ -61,7 +79,9 @@
 	        master-name:
 	        sentinel-hosts:
 	        
-	若存储类型选择db，则需要建表，语句在 https://github.com/seata/seata/blob/v1.7.0/script/server/db ，mysql的内容如下
+	若存储类型选择db，则seata-server需要建表，语句在解压包的seata-server\script\server\db目录找到，也可以在https://github.com/apache/incubator-seata/blob/v2.2.0/script/server/db/mysql.sql找到
+	
+	mysql的内容如下
 	-- -------------------------------- The script used when storeMode is 'db' --------------------------------
 	-- the table to store GlobalSession data
 	CREATE TABLE IF NOT EXISTS `global_table`
@@ -122,7 +142,7 @@
 	) ENGINE = InnoDB
 	  DEFAULT CHARSET = utf8mb4;
 	
-	CREATE TABLE IF NOT EXISTS `distributed_lock`
+	CREATE TABLE IF NOT EXISTS `distributed_lock_table`
 	(
 	    `lock_key`       CHAR(20) NOT NULL,
 	    `lock_value`     VARCHAR(20) NOT NULL,
@@ -131,12 +151,22 @@
 	) ENGINE = InnoDB
 	  DEFAULT CHARSET = utf8mb4;
 	
-	INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('AsyncCommitting', ' ', 0);
-	INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('RetryCommitting', ' ', 0);
-	INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('RetryRollbacking', ' ', 0);
-	INSERT INTO `distributed_lock` (lock_key, lock_value, expire) VALUES ('TxTimeoutCheck', ' ', 0);	      
+	INSERT INTO `distributed_lock_table` (lock_key, lock_value, expire) VALUES ('AsyncCommitting', ' ', 0);
+	INSERT INTO `distributed_lock_table` (lock_key, lock_value, expire) VALUES ('RetryCommitting', ' ', 0);
+	INSERT INTO `distributed_lock_table` (lock_key, lock_value, expire) VALUES ('RetryRollbacking', ' ', 0);
+	INSERT INTO `distributed_lock_table` (lock_key, lock_value, expire) VALUES ('TxTimeoutCheck', ' ', 0);
+	
+	
+	CREATE TABLE IF NOT EXISTS `vgroup_table`
+	(
+	    `vGroup`    VARCHAR(255),
+	    `namespace` VARCHAR(255),
+	    `cluster`   VARCHAR(255),
+	  UNIQUE KEY `idx_vgroup_namespace_cluster` (`vGroup`,`namespace`,`cluster`)
+	) ENGINE = InnoDB
+	  DEFAULT CHARSET = utf8mb4;    
 	      
-##启动server	    
+##启动seata-server	    
 	linux ./bin/seata-server.sh 或 ./bin/seata-server.sh -p 8091 -h 127.0.0.1 -m file
 	windows bin\seata-server.bat  		
 ##打开web	          
@@ -144,9 +174,9 @@
 	seata-server会起2个端口，7091是web，8091是client rpc
 
 ##docker
-	https://hub.docker.com/r/seataio/seata-server
+	https://hub.docker.com/r/apache/seata-server
 	
-	docker run --name seata-server -p 8091:8091 -p7091:7091 seataio/seata-server:1.7.0
+	docker run --name seata-server -p 8091:8091 -p7091:7091 apache/seata-server:2.2.0
 
 ##k8s
 	先在nacos配置好seata-server的application.yml对应的配置，例如使用redis、db存储
@@ -221,7 +251,7 @@
 	  labels:
 	    k8s-app: seata-server
 	spec:
-	  replicas: 1
+	  replicas: 2
 	  selector:
 	    matchLabels:
 	      k8s-app: seata-server
@@ -329,7 +359,7 @@
 	          global-table: global_table
 	          branch-table: branch_table
 	          lock-table: lock_table
-	          distributed-lock-table: distributed_lock
+	          distributed-lock-table: distributed_lock_table
 	          vgroup-table: vgroup_table
 	          query-limit: 1000
 	          max-wait: 5000    
@@ -348,7 +378,7 @@
 		<dependency>
 		    <groupId>io.seata</groupId>
 		    <artifactId>seata-spring-boot-starter</artifactId>
-		    <version>1.7.0</version><!--包含了seata-all -->
+		    <version>2.2.0</version><!--包含了seata-all -->
 		</dependency>
 <!-- 		<dependency> -->
 <!-- 		    <groupId>com.alibaba.cloud</groupId> -->
@@ -362,7 +392,7 @@
 <!--             </exclusions> -->
 <!-- 		</dependency> -->
 
-	不要引入以上版本的spring-cloud-alibaba-seata，因为这个版本不支持springcloud-loadbalancer，他还在使用ribbon导致类找不到无法启动，若有更新版本可以再尝试，到1.7.0时查了下maven中央仓库还是没有更新的版本
+	不要引入以上版本的spring-cloud-alibaba-seata，因为这个版本不支持springcloud-loadbalancer，他还在使用ribbon导致类找不到无法启动，若有更新版本可以再尝试，到seata-server的2.2.0时查了下maven中央仓库还是没有比 spring-cloud-alibaba-seata:2.2.0.RELEASE 更新的版本
 	
 	所以重写了spring-cloud-alibaba-seata的传递xid代码，包括Feign/RestTemplate出去、HandlerInterceptor进来
 
@@ -379,7 +409,7 @@
 	      server-addr: 172.22.122.27:8848
 	      username: nacos
 	      password: otanacos01
-	#      namespace: 7eeef4c2-4b9e-4363-82a2-f0effab3b128
+	      namespace: seata
 	#      group: SEATA_GROUP
 	#      cluster: default
 	#      context-path:
@@ -388,8 +418,9 @@
 	#      secret-key:	    
 
 ##AT建表
-	若代码中有使用AT模式，则需要建表，语句在 https://github.com/seata/seata/blob/v1.7.0/script/client/at/db ，mysql的内容如下
+	若代码中有使用AT模式，则需要对RM建表，语句在 https://github.com/apache/incubator-seata/blob/v2.2.0/script/client/at/db/mysql.sql
 	
+	mysql的内容如下
 	-- for AT mode you must to init this sql for you business database. the seata server not need it.
 	CREATE TABLE IF NOT EXISTS `undo_log`
 	(
@@ -401,13 +432,14 @@
 	    `log_created`   DATETIME(6)  NOT NULL COMMENT 'create datetime',
 	    `log_modified`  DATETIME(6)  NOT NULL COMMENT 'modify datetime',
 	    UNIQUE KEY `ux_undo_log` (`xid`, `branch_id`)
-	) ENGINE = InnoDB
-	  AUTO_INCREMENT = 1
-	  DEFAULT CHARSET = utf8mb4 COMMENT ='AT transaction mode undo table';
+	) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COMMENT ='AT transaction mode undo table';
+	ALTER TABLE `undo_log` ADD INDEX `ix_log_created` (`log_created`);
 	  
 ##TCC建表
-	若代码中有使用TCC模式的useTCCFence=true，则需要建表，语句在 https://github.com/seata/seata/blob/v1.7.0/script/client/tcc/db ，mysql的内容如下
+	若代码中有使用TCC模式的useTCCFence=true，则需要对RM建表，语句在 https://github.com/apache/incubator-seata/blob/v2.2.0/script/client/tcc/db/mysql.sql
 	
+	mysql的内容如下
+	-- -------------------------------- The script use tcc fence  --------------------------------
 	-- -------------------------------- The script use tcc fence  --------------------------------
 	CREATE TABLE IF NOT EXISTS `tcc_fence_log`
 	(
@@ -421,11 +453,12 @@
 	    KEY `idx_gmt_modified` (`gmt_modified`),
 	    KEY `idx_status` (`status`)
 	) ENGINE = InnoDB
-	DEFAULT CHARSET = utf8mb4;  
+	DEFAULT CHARSET = utf8mb4;
 	
 ##SAGA建表	
-	若代码中有使用SAGA模式，则需要建表，语句在 https://github.com/seata/seata/blob/v1.7.0/script/client/saga/db ，mysql的内容如下
+	若代码中有使用SAGA模式，则需要对RM建表，语句在 https://github.com/apache/incubator-seata/blob/v2.2.0/script/client/saga/db/mysql.sql
 	
+	mysql的内容如下
 	-- -------------------------------- The script used for sage  --------------------------------
 
 
@@ -489,7 +522,7 @@
 	    `gmt_end`                  DATETIME(3) COMMENT 'end time',
 	    PRIMARY KEY (`id`, `machine_inst_id`)
 	) ENGINE = InnoDB
-	  DEFAULT CHARSET = utf8mb4;	
+	  DEFAULT CHARSET = utf8mb4;
 
 ##使用注解	
 	AT只需 @GlobalTransactional

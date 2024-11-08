@@ -21,7 +21,7 @@ import io.github.icodegarden.nutrient.lang.util.SystemUtils;
  * @author Fangfang.Xu
  *
  */
-@LocalTCC // @GlobalTransactional在本地，且本地也需要事务，则需要加@LocalTCC（可以在接口上）
+@LocalTCC // @GlobalTransactional在本地，且本地也需要事务，则需要加@LocalTCC（可以在java interface类上）
 @Service
 public class TccService {
 	@Autowired
@@ -60,17 +60,14 @@ public class TccService {
 		System.out.println("tcc1commit");
 
 		Map<String, Object> actionContext = context.getActionContext();
-		System.out.println(actionContext);
 	}
 
 	public void tcc1rollback(BusinessActionContext context) {
 		System.out.println("tcc1rollback");
 
 		Map<String, Object> actionContext = context.getActionContext();
-		System.out.println(actionContext);
 
 		Map dto = (Map)actionContext.get("dto");
-		System.out.println(dto);
 		consumerSystemMapper.delete(dto.get("id"));
 	}
 
@@ -100,17 +97,14 @@ public class TccService {
 		System.out.println("tcc2commit");
 
 		Map<String, Object> actionContext = context.getActionContext();
-		System.out.println(actionContext);
 	}
 
 	public void tcc2rollback(BusinessActionContext context) {
 		System.out.println("tcc2rollback");
 
 		Map<String, Object> actionContext = context.getActionContext();
-		System.out.println(actionContext);
 
 		Map dto = (Map)actionContext.get("dto");
-		System.out.println(dto);
 		consumerSystemMapper.delete(dto.get("id"));
 	}
 }
