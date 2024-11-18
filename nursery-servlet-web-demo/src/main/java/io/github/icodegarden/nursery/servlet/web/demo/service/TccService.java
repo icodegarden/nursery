@@ -1,5 +1,8 @@
 package io.github.icodegarden.nursery.servlet.web.demo.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.seata.core.context.RootContext;
@@ -14,7 +17,9 @@ import io.github.icodegarden.nursery.servlet.web.demo.feign.SelfFeign;
 import io.github.icodegarden.nursery.servlet.web.demo.mapper.ConsumerSystemMapper;
 import io.github.icodegarden.nursery.servlet.web.demo.pojo.persistence.ConsumerSystemPO;
 import io.github.icodegarden.nursery.servlet.web.demo.pojo.transfer.TccDTO;
+import io.github.icodegarden.nursery.springcloud.seata.util.SeataBizContextUtils;
 import io.github.icodegarden.nutrient.lang.util.SystemUtils;
+import net.sf.jsqlparser.statement.alter.AlterSystemOperation;
 
 /**
  * 
@@ -49,6 +54,18 @@ public class TccService {
 		po.setUpdatedBy("xff");
 		po.setUpdatedAt(po.getUpdatedAt());
 		consumerSystemMapper.add(po);
+		
+		HashMap ext1 = new HashMap();
+		ext1.put("a", 1);
+		ext1.put("b", "mystring");
+		SeataBizContextUtils.setValue("jsonObject", ext1);
+		
+		ArrayList<Object> arrayList = new ArrayList<>();
+		arrayList.add("one");
+		arrayList.add("two");
+		SeataBizContextUtils.setValue("jsonArray", arrayList);
+		
+		SeataBizContextUtils.setValue("long", 100L);
 
 //			Thread.sleep(10000);
 
@@ -65,9 +82,14 @@ public class TccService {
 	public void tcc1rollback(BusinessActionContext context) {
 		System.out.println("tcc1rollback");
 
+		System.out.println(context);
 		Map<String, Object> actionContext = context.getActionContext();
 
-		Map dto = (Map)actionContext.get("dto");
+		Object l = SeataBizContextUtils.getValue("long");
+		Map jsonObject = SeataBizContextUtils.getValueJsonfy("jsonObject", Map.class);
+		List<String> jsonArray = SeataBizContextUtils.getValueJsonfyArray("jsonArray", String.class);
+		
+		Map dto = (Map)SeataBizContextUtils.getValue("dto");
 		consumerSystemMapper.delete(dto.get("id"));
 	}
 
@@ -89,6 +111,11 @@ public class TccService {
 		po.setUpdatedBy("xff");
 		po.setUpdatedAt(po.getUpdatedAt());
 		consumerSystemMapper.add(po);
+		
+		HashMap ext1 = new HashMap();
+		ext1.put("a", 11);
+		ext1.put("b", "mystring222");
+		SeataBizContextUtils.setValue("jsonObject", ext1);
 
 		return po;
 	}
@@ -102,8 +129,9 @@ public class TccService {
 	public void tcc2rollback(BusinessActionContext context) {
 		System.out.println("tcc2rollback");
 
+		System.out.println(context);
 		Map<String, Object> actionContext = context.getActionContext();
-
+		
 		Map dto = (Map)actionContext.get("dto");
 		consumerSystemMapper.delete(dto.get("id"));
 	}

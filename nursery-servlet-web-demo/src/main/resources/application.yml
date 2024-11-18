@@ -50,7 +50,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://192.168.29.160:3306/nursery_servlet_web_demo?setUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&allowMultiQueries=true
+    url: jdbc:mysql://192.168.29.161:3306/nursery_servlet_web_demo?setUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&allowMultiQueries=true
     username: root
     password: 123456
     hikari:

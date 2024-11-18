@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class TccDTO implements Serializable {
@@ -14,4 +13,11 @@ public class TccDTO implements Serializable {
 	
 	private Long id;
 	private String name;
+	
+	public TccDTO(Long id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+	
 }
