@@ -39,7 +39,7 @@ import reactor.core.publisher.Mono;
  * 
  * <br>
  * 
- * 默认的instanceMetadataTagName是flow.tags, json array, ["a","b",...]<br>
+ * 默认的instanceMetadataTagName是flow.tags, json array, ["a","b",...],例如nacos的spring.cloud.nacos.discovery.metadata.flow.tags='["xff"]'<br>
  * 默认的IdentityFlowTagExtractor是从request.header中获取X-FlowTag-Required、X-FlowTag-First的值<br>
  * 默认的L2 LoadBalancer是轮询<br>
  * 
