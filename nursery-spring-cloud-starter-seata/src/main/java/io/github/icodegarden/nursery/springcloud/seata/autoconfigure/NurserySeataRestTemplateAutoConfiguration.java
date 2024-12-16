@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
@@ -14,7 +15,6 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 
 import io.github.icodegarden.nursery.springcloud.seata.SeataRestTemplateInterceptor;
-import io.seata.spring.annotation.GlobalTransactional;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 

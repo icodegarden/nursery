@@ -2,6 +2,7 @@ package io.github.icodegarden.nursery.springcloud.seata;
 
 import java.io.IOException;
 
+import org.apache.seata.core.context.RootContext;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -9,7 +10,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.support.HttpRequestWrapper;
 import org.springframework.util.StringUtils;
 
-import io.seata.core.context.RootContext;
 
 /**
  * 

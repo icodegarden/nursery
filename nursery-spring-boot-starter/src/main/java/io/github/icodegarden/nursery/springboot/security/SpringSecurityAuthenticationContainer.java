@@ -14,7 +14,12 @@ public class SpringSecurityAuthenticationContainer implements AuthenticationCont
 	 */
 	@Override
 	public Authentication getAuthentication() {
-		return (Authentication) SecurityContextHolder.getContext().getAuthentication();
+		org.springframework.security.core.Authentication authentication = SecurityContextHolder.getContext()
+				.getAuthentication();
+		if (authentication instanceof Authentication) {
+			return (Authentication) authentication;
+		}
+		return null;
 	}
 
 	@Override

@@ -21,11 +21,11 @@ import io.github.icodegarden.nursery.springboot.properties.NurseryEndpointProper
  *
  */
 @EnableConfigurationProperties(NurseryEndpointProperties.class)
-/**
- * 默认打开
- */
 //@Conditional(ReadinessEndpointEnabledConditions.class)//只针对网关
-@ConditionalOnProperty(value = "icodegarden.nursery.endpoint.readiness.enabled", havingValue = "true", matchIfMissing = true)
+/**
+ * 默认不开，网关配置打开
+ */
+@ConditionalOnProperty(value = "icodegarden.nursery.endpoint.readiness.enabled", havingValue = "true", matchIfMissing = false)
 @ConditionalOnClass(HealthIndicator.class)//要求有actuator
 @Configuration
 public class NurseryReadinessEndpointAutoConfiguration {

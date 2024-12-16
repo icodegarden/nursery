@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import io.github.icodegarden.beecomb.executor.BeeCombExecutor;
 import io.github.icodegarden.beecomb.executor.registry.JobHandler;
@@ -41,11 +42,16 @@ public class NurseryBeecombExecutorAutoConfiguration implements ApplicationListe
 	@Bean
 	public BeeCombExecutor beeCombExecutor(NurseryBeeCombExecutorProperties properties, Environment env) {
 		log.info("nursery init bean of BeeCombExecutor");
+		
+		String executorName = properties.getExecutorName();
+		if(!StringUtils.hasText(executorName)) {
+			String appName = env.getProperty("spring.application.name");
+			Assert.hasText(appName, "spring.application.name must config when executorName not config.");
+			
+			executorName = appName;
+		}
 
-		String appName = env.getProperty("spring.application.name");
-		Assert.hasText(appName, "spring.application.name must config");
-
-		BeeCombExecutor beeCombExecutor = BeeCombExecutor.start(appName, properties);
+		BeeCombExecutor beeCombExecutor = BeeCombExecutor.start(executorName, properties);
 
 		this.beeCombExecutor = beeCombExecutor;
 
