@@ -5,7 +5,7 @@
 
 	<groupId>io.github.icodegarden</groupId>
 	<artifactId>nursery</artifactId>
-	<version>3.0.1</version>
+	<version>3.1.0</version>
 
 	<packaging>pom</packaging>
 
@@ -42,7 +42,7 @@
 		<spring-boot.version>3.0.11</spring-boot.version>
 		<spring-cloud.version>2022.0.4</spring-cloud.version>
 		<spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
-		<nutrient.version>3.0.1</nutrient.version>
+		<nutrient.version>3.0.2</nutrient.version>
 		<wing.version>1.0.0</wing.version>
 		<beecomb.version>2.1.0</beecomb.version>
 		<pagehelper-spring-boot-starter.version>1.4.7</pagehelper-spring-boot-starter.version>
@@ -166,6 +166,23 @@
                 </executions>
             </plugin>
 
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version> <!-- 确保使用适合你项目的版本 -->
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <!-- 添加默认的实现条目，这将包括 Implementation-Version -->
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <!-- 如果你想添加其他自定义条目，也可以在这里指定 -->
+<!--                            <manifestEntries>-->
+<!--                                <Build-Time>${maven.build.timestamp}</Build-Time>-->
+<!--                            </manifestEntries>-->
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 </project>

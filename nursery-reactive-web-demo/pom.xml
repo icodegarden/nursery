@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>io.github.icodegarden</groupId>
 		<artifactId>nursery</artifactId>
-		<version>3.0.1</version>
+		<version>3.1.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>nursery-reactive-web-demo</artifactId>
@@ -33,12 +33,12 @@
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-web-reactive</artifactId><!-- reactive web项目-->
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-cloud-starter</artifactId><!-- cloud项目-->
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
             <groupId>org.springframework.boot</groupId>
@@ -76,14 +76,14 @@
 			<dependency>
 	            <groupId>io.github.icodegarden</groupId>
 	            <artifactId>nursery-spring-boot-dependencies</artifactId>
-	            <version>3.0.1</version>
+	            <version>3.1.0</version>
 	            <type>pom</type>
 	            <scope>import</scope>
 	        </dependency>
 	        <dependency>
 	            <groupId>io.github.icodegarden</groupId>
 	            <artifactId>nursery-spring-cloud-dependencies</artifactId>
-	            <version>3.0.1</version>
+	            <version>3.1.0</version>
 	            <type>pom</type>
 	            <scope>import</scope>
 	        </dependency>

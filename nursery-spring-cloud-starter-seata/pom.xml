@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>io.github.icodegarden</groupId>
 		<artifactId>nursery</artifactId>
-		<version>3.0.1</version>
+		<version>3.1.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>nursery-spring-cloud-starter-seata</artifactId>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-cloud-starter</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency><!-- 基础必须 -->
 		<dependency>
 		    <groupId>org.apache.seata</groupId>

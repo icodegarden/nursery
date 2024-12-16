@@ -1,11 +1,13 @@
 package io.github.icodegarden.nursery.springboot.web.servlet.handler;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -36,8 +38,8 @@ public class ServletApiResponseExceptionHandler extends AbstractServletException
 	public ResponseEntity<ApiResponse> onPathVariableMissing(HttpServletRequest request,
 			MissingPathVariableException cause) throws Exception {
 		ErrorCodeException ece = new ClientParameterMissingErrorCodeException(
-				ClientParameterMissingErrorCodeException.SubPair.MISSING_PARAMETER.getSub_code(),
-				"pathVariable:" + cause.getVariableName());
+				ClientParameterMissingErrorCodeException.SubPair.MISSING_PATH_VARIABLE.getSub_code(),
+				cause.getVariableName());
 		if (log.isWarnEnabled()) {
 			log.warn("{} {}", PARAMETER_INVALID_LOG_MODULE, ece.getMessage(), cause);
 		}
@@ -53,8 +55,8 @@ public class ServletApiResponseExceptionHandler extends AbstractServletException
 	public ResponseEntity<ApiResponse> onRequestHeaderMissing(HttpServletRequest request,
 			MissingRequestHeaderException cause) throws Exception {
 		ErrorCodeException ece = new ClientParameterMissingErrorCodeException(
-				ClientParameterMissingErrorCodeException.SubPair.MISSING_PARAMETER.getSub_code(),
-				"header:" + cause.getHeaderName());
+				ClientParameterMissingErrorCodeException.SubPair.MISSING_REQUEST_HEADER.getSub_code(),
+				cause.getHeaderName());
 		if (log.isWarnEnabled()) {
 			log.warn("{} {}", PARAMETER_INVALID_LOG_MODULE, ece.getMessage(), cause);
 		}
@@ -70,8 +72,8 @@ public class ServletApiResponseExceptionHandler extends AbstractServletException
 	public ResponseEntity<ApiResponse> onRequestCookieMissing(HttpServletRequest request,
 			MissingRequestCookieException cause) throws Exception {
 		ErrorCodeException ece = new ClientParameterMissingErrorCodeException(
-				ClientParameterMissingErrorCodeException.SubPair.MISSING_PARAMETER.getSub_code(),
-				"cookie:" + cause.getCookieName());
+				ClientParameterMissingErrorCodeException.SubPair.MISSING_REQUEST_COOKIE.getSub_code(),
+				 cause.getCookieName());
 		if (log.isWarnEnabled()) {
 			log.warn("{} {}", PARAMETER_INVALID_LOG_MODULE, ece.getMessage(), cause);
 		}
@@ -87,8 +89,8 @@ public class ServletApiResponseExceptionHandler extends AbstractServletException
 	public ResponseEntity<ApiResponse> onParameterMissing(HttpServletRequest request,
 			MissingServletRequestParameterException cause) throws Exception {
 		ErrorCodeException ece = new ClientParameterMissingErrorCodeException(
-				ClientParameterMissingErrorCodeException.SubPair.MISSING_PARAMETER.getSub_code(),
-				"parameter:" + cause.getParameterName());
+				ClientParameterMissingErrorCodeException.SubPair.MISSING_REQUEST_PARAMETER.getSub_code(),
+				cause.getParameterName());
 		if (log.isWarnEnabled()) {
 			log.warn("{} {}", PARAMETER_INVALID_LOG_MODULE, ece.getMessage(), cause);
 		}
@@ -135,13 +137,23 @@ public class ServletApiResponseExceptionHandler extends AbstractServletException
 		ErrorCodeException ece;
 		if (cause.getBindingResult().hasErrors()) {
 			List<ObjectError> allErrors = cause.getBindingResult().getAllErrors();
-			String subMsg = allErrors.stream().findFirst().map(error -> {
+//			String subMsg = allErrors.stream().findFirst().map(error -> {
+//				if (error instanceof FieldError) {
+//					String field = ((FieldError) error).getField();
+//					return "parameter:" + field;
+//				}
+//				return cause.getMessage();
+//			}).get();
+			
+			String subMsg = allErrors.stream().map(error -> {
 				if (error instanceof FieldError) {
 					String field = ((FieldError) error).getField();
-					return "parameter:" + field;
+					StringBuilder sb = new StringBuilder(field.length() + error.getDefaultMessage().length());
+					sb.append(field).append(" ").append(error.getDefaultMessage());
+					return sb.toString();
 				}
-				return cause.getMessage();
-			}).get();
+				return StringUtils.hasText(error.getDefaultMessage()) ? error.getDefaultMessage() : cause.getMessage();
+			}).collect(Collectors.joining(";"));
 
 			ece = new ClientParameterInvalidErrorCodeException(
 					ClientParameterInvalidErrorCodeException.SubPair.INVALID_PARAMETER.getSub_code(), subMsg);

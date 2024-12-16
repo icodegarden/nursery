@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>io.github.icodegarden</groupId>
 		<artifactId>nursery</artifactId>
-		<version>3.0.1</version>
+		<version>3.1.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>nursery-servlet-web-demo</artifactId>
@@ -24,12 +24,12 @@
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-web-servlet</artifactId><!-- servletweb项目-->
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-cloud-starter</artifactId><!-- cloud项目-->
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
             <groupId>org.springframework.boot</groupId>
@@ -43,22 +43,22 @@
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-mybatis</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-elasticsearch-latest</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-redis-lettuce</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-hbase-apache</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 			<!-- 下面这些在项目里需要排除，否则冲突启动报错 -->
 			<exclusions>
 		    	<exclusion>
@@ -86,12 +86,12 @@
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-kafka</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-zookeeper</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.curator</groupId>
@@ -112,22 +112,22 @@
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-cache</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-boot-starter-beecomb</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-cloud-starter-sentinel</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.icodegarden</groupId>
 			<artifactId>nursery-spring-cloud-starter-seata</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.0</version>
 		</dependency>
 		
 		<dependency>
@@ -168,14 +168,14 @@
 			<dependency>
 	            <groupId>io.github.icodegarden</groupId>
 	            <artifactId>nursery-spring-boot-dependencies</artifactId>
-	            <version>3.0.1</version>
+	            <version>3.1.0</version>
 	            <type>pom</type>
 	            <scope>import</scope>
 	        </dependency>
 	        <dependency>
 	            <groupId>io.github.icodegarden</groupId>
 	            <artifactId>nursery-spring-cloud-dependencies</artifactId>
-	            <version>3.0.1</version>
+	            <version>3.1.0</version>
 	            <type>pom</type>
 	            <scope>import</scope>
 	        </dependency>
